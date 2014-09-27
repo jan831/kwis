@@ -1,0 +1,38 @@
+.glyphicon-edit, .glyphicon-tag {
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+.tooltip-inner {
+    max-width: 350px;
+}
+
+select{
+	max-width: 100%;
+}
+
+textarea{
+	width: 100%;
+}
+
+#question_detail table#tasks {
+	max-width: 600px;
+}
+
+#question_detail img {
+	max-width: 400px;
+}
+#question_detail table#images {
+	max-width: 500px;
+}
+
+#question_detail table#versions {
+	max-width: 500px;
+}
+
+#question_diff table#audit_info{
+	max-width: 400px;
+}
+
+ins {color:green;background:#dfd;text-decoration:none}
+del {color:red;background:#fdd;text-decoration:none}
