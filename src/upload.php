@@ -38,7 +38,7 @@
 		$update['action'] = "delete";
 		updateWithAction($update);
 		unlink( "upload/" . getQuizId() . '-' . $imageId . '.jpeg');
-		redirect("question_detail.php?id=" . $questionId);
+		redirect("question_detail.php?id=$questionId#images");
 	}
 	else{
 		if(isNotBlank ($_POST['url'])){
@@ -102,7 +102,7 @@
 					or die('cannot imagejpeg ');
 			}
 
-			redirect("question_detail.php?id=" . $questionId);
+			redirect("question_detail.php?id=$questionId#images");
 		}
 		else{
 			die("image upload error");

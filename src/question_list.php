@@ -40,96 +40,97 @@ include ("php/question_selector.php");
 					$count +=$question['childQuestions'];
 				}
 			}
-
-
-			echo "<h2>" . $count . " vragen</h2>";
-			echo "<span id=\"showAll\" class=\"clickeable\"> toon alle vragen</span> / <span id=\"hideAll\" class=\"clickeable\">verberg vragen (toon alleen titels)</span> ";
-			echo "<ul>";
-			foreach($results as $title => $questionGroup){
-				echo "<li >";
-				echo "<h3 class=\"groupTitle clickeable\" >$title</h3>";
-				echo"<ol class=\"list_\">";
-				foreach($questionGroup["questions"] as $question){
-					$id  = $question["questionId"];
-					?>
-					<li >
-					<div class="questionGroup" id="<?php echo "question$id"; ?>">
-						<?php
-						echo "<div>";
-						if($selector["order"] == "thema_round" && $question["roundSequence"] > 0){
-							echo "<span> Ronde " . $question["round"] . " </span> - ";
-						}
-						
-						if($selector["order"] == "round_thema"  && $question["themaSequence"] > 0){
-							echo "<span>" . $question["thema"] . " </span>  - ";
-						}
-						echo formatAuditInfo($question) ."<div class=\"editableTextArea description\" id=\"description_$id\">" .$question['description'] ."</div></div>";
-						echo formatAnswer($question, array("editable"=> true));
-						echo "<div><div class=\"editableTextArea answerExtra\" id=\"answerExtra_$id\">". $question['answerExtra'] ."</div></div>";
-
-						if($question['childQuestions'] > 0){
-						echo '<ul  class="childQuestions">';
-						foreach($question["children"]  as $subQuestion){
-							$id  = $subQuestion["questionId"];
-							echo '<li ><div  id="question' . $id . '" class="questionGroup">';
-							echo "<div>".formatAuditInfo($subQuestion) ."<div class=\"editableTextArea description\" id=\"description_$id\">" .$subQuestion['description'] ."</div></div>";
-							echo formatAnswer($subQuestion, array("editable"=> true));
-							echo "<div><div class=\"editableTextArea answerExtra\" id=\"answerExtra_$id\">". $subQuestion['answerExtra'] ."</div></div>";
-							echo '</div></li>';
-						}
-						echo'</ul>';
+?>
+<div class="panel panel-default" id="questions">
+	<div class="panel-heading"><h3 class="panel-title"><?php echo $count?> vragen</h3></div>
+	<div class="panel-body">
+		<?php 
+		echo "<ul>";
+		foreach($results as $title => $questionGroup){
+			echo "<li >";
+			echo "<h3 class=\"groupTitle clickeable\" >$title</h3>";
+			echo"<ol class=\"list_\">";
+			foreach($questionGroup["questions"] as $question){
+				$id  = $question["questionId"];
+				?>
+				<li >
+				<div class="questionGroup" id="<?php echo "question$id"; ?>">
+					<?php
+					echo "<div>";
+					if($selector["order"] == "thema_round" && $question["roundSequence"] > 0){
+						echo "<span> Ronde " . $question["round"] . " </span> - ";
 					}
-					?>
+					
+					if($selector["order"] == "round_thema"  && $question["themaSequence"] > 0){
+						echo "<span>" . $question["thema"] . " </span>  - ";
+					}
+					echo formatAuditInfo($question) ."<div class=\"editableTextArea description\" id=\"description_$id\">" .$question['description'] ."</div></div>";
+					echo formatAnswer($question, array("editable"=> true));
+					echo "<div><div class=\"editableTextArea answerExtra\" id=\"answerExtra_$id\">". $question['answerExtra'] ."</div></div>";
 
-				</div>
-				</li>
-				<?php
+					if($question['childQuestions'] > 0){
+					echo '<ul  class="childQuestions">';
+					foreach($question["children"]  as $subQuestion){
+						$id  = $subQuestion["questionId"];
+						echo '<li ><div  id="question' . $id . '" class="questionGroup">';
+						echo "<div>".formatAuditInfo($subQuestion) ."<div class=\"editableTextArea description\" id=\"description_$id\">" .$subQuestion['description'] ."</div></div>";
+						echo formatAnswer($subQuestion, array("editable"=> true));
+						echo "<div><div class=\"editableTextArea answerExtra\" id=\"answerExtra_$id\">". $subQuestion['answerExtra'] ."</div></div>";
+						echo '</div></li>';
+					}
+					echo'</ul>';
 				}
-				echo"</ol></li>";
+				?>
+
+			</div>
+			</li>
+			<?php
 			}
-			echo"</ul>";
-			?>
-			<script type="text/javascript">
-			var getUpdateData  = function(self, new_value){
-				var answerId = self.id.split('_')[1];
-				var field =  self.id.split('_')[0];
-				var updateInfo = { "detail[table]": 'question', "detail[id]": answerId };
-				updateInfo["detail[param][" + field +"]"] = new_value;
-				debug(updateInfo);
-				return updateInfo;
-			}
+			echo"</ol></li>";
+		}
+		echo"</ul>";
+		?>
+		<script type="text/javascript">
+		var getUpdateData  = function(self, new_value){
+			var answerId = self.id.split('_')[1];
+			var field =  self.id.split('_')[0];
+			var updateInfo = { "detail[table]": 'question', "detail[id]": answerId };
+			updateInfo["detail[param][" + field +"]"] = new_value;
+			debug(updateInfo);
+			return updateInfo;
+		}
 
-			$(document).ready(function(){
-				$( ".editableTextArea" ).eip( "save.php", {
-					form_type: "textarea",
-					editfield_class: "textInput",
-					getUpdateData: getUpdateData
-				} );
+// 		$(document).ready(function(){
+// 			$( ".editableTextArea" ).eip( "save_data.php", {
+// 				form_type: "textarea",
+// 				editfield_class: "textInput",
+// 				getUpdateData: getUpdateData
+// 			} );
 
-				$( ".editableText" ).eip( "save.php", {
-					form_type: "text",
-					editfield_class: "textInput",
-					getUpdateData: getUpdateData
-				} );
+// 			$( ".editableText" ).eip( "save_data.php", {
+// 				form_type: "text",
+// 				editfield_class: "textInput",
+// 				getUpdateData: getUpdateData
+// 			} );
 
-				$( ".editableSelect" ).eip( "save.php", {
-					form_type: "select",
-					select_options: {
-						<?php
-					  for($i = 0; $i < count($difficulties)-1; $i++) {
-							$diff = $difficulties[$i];
-							echo $diff["id"] . ": '". $diff["description"] . "',";
-						}
-						$diff = $difficulties[count($difficulties)-1];
-							echo $diff["id"] . ": '". $diff["description"] ."'";
-						?>
-					},
-					getUpdateData: getUpdateData,
-					after_save: function(self){
-						self.className =updateDifficulty(self.className, $(self).html());
-					}
-				} );
-			});
+// 			$( ".editableSelect" ).eip( "save_data.php", {
+// 				form_type: "select",
+// 				select_options: {
+					<?php
+// 				  for($i = 0; $i < count($difficulties)-1; $i++) {
+// 						$diff = $difficulties[$i];
+// 						echo $diff["id"] . ": '". $diff["description"] . "',";
+// 					}
+// 					$diff = $difficulties[count($difficulties)-1];
+// 						echo $diff["id"] . ": '". $diff["description"] ."'";
+// 					?>
+// 				},
+// 				getUpdateData: getUpdateData,
+// 				after_save: function(self){
+// 					self.className =updateDifficulty(self.className, $(self).html());
+// 				}
+// 			} );
+// 		});
 
 
 			</script>

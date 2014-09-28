@@ -1,4 +1,4 @@
-.glyphicon-edit, .glyphicon-tag {
+.glyphicon{
 	padding-left: 2px;
 	padding-right: 2px;
 }
@@ -15,24 +15,62 @@ textarea{
 	width: 100%;
 }
 
-#question_detail table#tasks {
-	max-width: 600px;
+.container-fluid {
+	max-width: 1200px;
 }
+.medium-width{
+	max-width: 500px;
+}]
 
 #question_detail img {
 	max-width: 400px;
 }
-#question_detail table#images {
-	max-width: 500px;
-}
-
-#question_detail table#versions {
-	max-width: 500px;
-}
-
-#question_diff table#audit_info{
-	max-width: 400px;
+.list-group .glyphicon-trash{
+	float: right;
 }
 
 ins {color:green;background:#dfd;text-decoration:none}
 del {color:red;background:#fdd;text-decoration:none}
+
+
+.difficulty {
+	padding: 2px; 
+	border-left: solid 7px;
+	overflow: hidden;
+	color: white;
+}
+
+.difficulty1{
+	border-color:#0a9d07; /* dark greeg*/
+}
+
+.difficulty2{
+	border-color:#ADFF2F; /* green*/ 
+}
+
+
+.difficulty3{
+	border-color:#ff9a00; /* orange*/
+}
+
+.difficulty4{
+	border-color:#FF0000; /* red */
+}
+
+
+.difficulty5{
+	border-color:#b22222; /* dark red */
+}
+
+
+.difficulty0{
+	border-color:#FFFFFF; /* white */
+}
+
+.slideImages{
+	float: left;
+}
+
+.slideImages img {
+	height: 100px;
+}

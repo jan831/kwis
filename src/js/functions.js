@@ -17,7 +17,6 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 function debug(){
-	return;
 	if (typeof console == "undefined" || typeof console.log == "undefined"){
 	//do nothing for IE	
 	}
@@ -92,7 +91,7 @@ function myhandler_dropped(node, cellNode){
 	}
 	debug(answerNode, cellNode,  updateInfo );
 
-	$.post("save.php", updateInfo , function(data){
+	$.post("save_data.php", updateInfo , function(data){
  			showStatus("vraag aangepast");
 		 	updateDifficulties();
 	});
@@ -145,8 +144,10 @@ function resetLayout(){
 
 function showStatus(message){
 		$("#statusBox").text(message);
+		console.log("showStatus", message);
 		 // $("#statusBox").glow('#E0E0E0', 2000);
-		 $("#statusBox").effect('highlight', {color: '#E0E0E0'}, 2000);
+		 // $("#statusBox").effect('highlight', {color: '#E0E0E0'}, 2000);
+		//TODO
 	}
 	
 function updateDifficulty(className, newDifficulty){
@@ -189,12 +190,14 @@ function getInlineEditData(element, new_value, tableName){
 }
 
 function installUpdateSequence(listSelector, elementSelector, tableName){
-	$(listSelector).sortable({ 
-		update : function () {
-			updateSequence(listSelector, elementSelector, tableName);
-	  }
-	}); 
-	$(listSelector).disableSelection();
+	
+	
+//	$(listSelector).sortable({ 
+//		update : function () {
+//			updateSequence(listSelector, elementSelector, tableName);
+//	  }
+//	}); 
+//	$(listSelector).disableSelection();
 };
 	
 function updateSequence(listSelector, elementSelector, tableName){
@@ -211,20 +214,12 @@ function updateSequence(listSelector, elementSelector, tableName){
 	}
 
 	debug(order, updateInfo);
-	$.post("save.php", updateInfo , function(data){
+	$.post("save_data.php", updateInfo , function(data){
 		showStatus("volgorde aangepast");
 		debug("Data Loaded: " + data);
 	});
 }
 
-function scrollToContent(){
-	debug("hash |" + window.location.hash +"|" );
-	if(window.location.hash == "") {
-		$('html,body').animate({
-			scrollTop : $(".menuContainer").next().offset().top - 5
-		}, 0);
-	}
-}
 	
 $(document).ready(function(){
 	$(".hasToolTip").tooltip({
@@ -245,12 +240,6 @@ $(document).ready(function(){
 		// console.log("done", $("#selectorTable").is(":visible") );
 	});
 	
-	$( "#showAll").click(function(){
-		$(".list_").show();
-	});
-	$( "#hideAll").click(function(){
-		$(".list_").hide();
-	});			
 	$( ".groupTitle").click(function(){
 		$("#list_" + this.id).toggle();
 	});
@@ -260,5 +249,4 @@ $(document).ready(function(){
 	if(isVisible != null && (isVisible == "false" || isVisible == false)){
 		$("#selectorTable").hide();
 	}
-	scrollToContent();
 });

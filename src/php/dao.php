@@ -153,10 +153,10 @@ $queries["task"]["select"] = "select ts.id as id, ts.description, ts.done as don
 							" where 1 = 1 ";
 
 $queries["task"]["param"]["hideDeletedQuestion"] = "q.deleted = false ";
-$queries["task"]["order"]["default"] = " tc.id, ts.done ";
+$queries["task"]["order"]["default"] = " ts.modificationDate ASC ";
 $queries["task"]["order"]["taskCategory_done"] = " tc.description, ts.done ";
 $queries["task"]["order"]["done_taskCategory"] = " ts.done, tc.description ";
-$queries["task"]["order"]["thema_round"] = "t.sequence, r.sequence";
+$queries["task"]["order"]["thema_round"] = "t.sequence,,  r.sequence";
 $queries["task"]["order"]["round_thema"] = "r.sequence, t.sequence";
 $queries["task"]["order"]["modificationDate"] = " ts.modificationDate DESC, t.id";
 $queries["task"]["prefix"] = "ts.";

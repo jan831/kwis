@@ -46,6 +46,7 @@ function printHeader($title = null){
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+	<link rel="shortcut icon" type="image/png" href="images/icon.png">
 	<title> <?php echo $title; ?></title>
 
 	<!-- Bootstrap -->
@@ -62,8 +63,14 @@ function printHeader($title = null){
 	 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="lib/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
+
+	<!--  jQuery plugins -->
+	<script src="lib/jquery.cookie.js"></script>
 	
-	<link href="css/style.css" rel="stylesheet">
+	<!-- custom css & javascript -->
+	<link href="css/style.css" rel="stylesheet"></link>
+	<link href="css/print.css" rel="stylesheet" media="print"></link>
+	<script src="js/functions.js"></script>
 	
 	<script type="text/javascript">
 	$(document).ready(function(){
@@ -111,8 +118,8 @@ if($questionId != null)
 			<li class="<?php echo isCurPage('question_detail.php?id=-1');?>">
 				<a href="question_detail.php?id=-1" id="menu_newQuestion" >nieuwe vraag</a>
 			</li>
-			<li class="<?php echo isCurPage('list_for_print.php');?>">
-				<a href="list_for_print.php" id="menu_print" >print lijst</a>
+			<li class="<?php echo isCurPage('question_list_print.php');?>">
+				<a href="question_list_print.php" id="menu_print" >print lijst</a>
 			</li>
 		<?php } ?>
 		</ul>
@@ -120,23 +127,23 @@ if($questionId != null)
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Extra <span class="caret"></span></a>
 				<ul class="dropdown-menu" role="menu">
-					<li>
-						<a href="rounds.php" class="menuItem <?php echo isCurPage('rounds.php');?>" id="menu_list" >rondes</a>
+					<li class="<?php echo isCurPage('round_list.php');?>">
+						<a href="round_list.php" >rondes</a>
 					</li>
-					<li>
-						<a href="themas.php" class="menuItem <?php echo isCurPage('themas.php');?>" id="menu_list" >thema's</a>
+					<li class="<?php echo isCurPage('thema_list.php');?>">
+						<a href="thema_list.php">thema's</a>
 					</li>
-					<li>
-						<a href="file_list.php" class="menuItem <?php echo isCurPage('file_list.php');?>" id="menu_list" >files</a>
+					<li class="<?php echo isCurPage('file_list.php');?>">
+						<a href="file_list.php">files</a>
 					</li>
-					<li>
-						<a href="slides.php" class="menuItem <?php echo isCurPage('slides.php');?>" id="menu_list" >slides</a>
+					<li class="<?php echo isCurPage('slide_list.php');?>">
+						<a href="slide_list.php">slides</a>
 					</li>
-					<li>
-						<a href="list_for_delete.php" class="menuItem <?php echo isCurPage('list_for_delete.php');?>" id="menu_list" >vragen verwijderen</a>
+					<li class="<?php echo isCurPage('question_list_delete.php');?>">
+						<a href="question_list_delete.php">vragen verwijderen</a>
 					</li>
-					<li>
-						<a href="list_for_analysis.php" class="menuItem <?php echo isCurPage('list_for_analysis.php');?>" id="menu_analysis" >analyze</a>
+					<li class="<?php echo isCurPage('question_list_analysis.php');  echo isCurPage('question_list_analysis.php?input=1');?>">
+						<a href="question_list_analysis.php">analyze</a>
 					</li>
 				</ul>
 			</li>
@@ -268,59 +275,61 @@ debug($options);
 		$detailLink = '';
 
 	// if($question['childQuestions'] == 0){
-		if($editable){
-			$editableStyle="editableText";
-		} else {
-			$editableStyle = "";
-		}
-		if(isNotBlank($question['answer']))
-			$answer = $question['answer'];
-		else{
-			$answer = '&nbsp;&nbsp;&nbsp;&nbsp;';
-		}
+	if($editable){
+		$editableStyle="editableText";
+	} else {
+		$editableStyle = "";
+	}
+	if(isNotBlank($question['answer']))
+		$answer = $question['answer'];
+	else{
+		$answer = '&nbsp;&nbsp;&nbsp;&nbsp;';
+	}
 
-		$description = "";
-		$tooltipClass = "";
-		if($showHiddenQuestion == true){
-			$description = '<div class="hidden" id="tooltip_answer_' . $question["questionId"]  .'">' .nl2br( $question['description']) . '</div>';
-			$tooltipClass = "hasToolTip";
-		}
+	$description = "";
+	$tooltipClass = "";
+	if($showHiddenQuestion == true){
+		$description = '<div class="hidden" id="tooltip_answer_' . $question["questionId"]  .'">' .nl2br( $question['description']) . '</div>';
+		$tooltipClass = "hasToolTip";
+	}
 
-		$hiddenAnswerClass = "";
-		$hiddenAnswerToolTip = "";
-		if($hiddenAnswer == true){
-			$hiddenAnswerClass="hiddenAnswer";
-			$hiddenAnswerToolTip = " title=\"$answer\" ";
-		}
+	$hiddenAnswerClass = "";
+	$hiddenAnswerToolTip = "";
+	if($hiddenAnswer == true){
+		$hiddenAnswerClass="hiddenAnswer";
+		$hiddenAnswerToolTip = " title=\"$answer\" ";
+	}
 
-		$taskIndicator = "";
-		if($showTasks && $question['openTasks'] >0){
-			$taskDescr = '';
-			foreach($question['tasks'] as $task){
-				if($task['done'] == false){
-					if(strlen($taskDescr) >0){
-						$taskDescr .= ',';
-					}
-					$taskDescr= $taskDescr . ' ' . $task['taskCategory'];
+	$taskIndicator = "";
+	if($showTasks && $question['openTasks'] >0){
+		$taskDescr = '';
+		foreach($question['tasks'] as $task){
+			if($task['done'] == false){
+				if(strlen($taskDescr) >0){
+					$taskDescr .= ',';
 				}
+				$taskDescr= $taskDescr . ' ' . $task['taskCategory'];
 			}
-				$taskDescr = 'Open notities:' .$taskDescr;
-			$taskIndicator = '<a  href="question_detail.php?id=' . $question["questionId"] . '#notes"><span class="glyphicon glyphicon-tag hasToolTip" data-toggle="tooltip" title="' . $taskDescr . '" ></span></a>';
 		}
+			$taskDescr = 'Open notities:' .$taskDescr;
+		$taskIndicator = '<a  href="question_detail.php?id=' . $question["questionId"] . '#notes"><span class="glyphicon glyphicon-tag hasToolTip" data-toggle="tooltip" title="' . $taskDescr . '" ></span></a>';
+	}
 
-		if($showDifficulty)
-			$difficulty = "difficulty difficulty" . $question['difficulty'] ;
-		else
-			$difficulty = "";
+	if($showDifficulty)
+		$difficulty = "difficulty difficulty" . $question['difficulty'] ;
+	else
+		$difficulty = "";
 
-		$difficultyEditable = "";
-		if($editable && $showDifficulty){
-			$difficultyEditable="<span class=\"editableSelect $difficulty \"  id=\"difficulty_" . $question["questionId"] ."\">". $question['difficulty'] ."</span>";
-			$difficulty="";
-		}
+	$difficultyEditable = "";
+	if($editable && $showDifficulty){
+		$difficultyEditable="<span class=\"editableSelect $difficulty \"  id=\"difficulty_" . $question["questionId"] ."\">". $question['difficulty'] ."</span>";
+		$difficulty="";
+	} else {
+		$difficultyEditable="<span class=\"$difficulty \"  id=\"difficulty_" . $question["questionId"] ."\">&nbsp;</span>";
+	}
 
 
-		return "$difficultyEditable<span class=\"$editableStyle $tooltipClass answer $hiddenAnswerClass  $difficulty \" id=\"answer_" . $question["questionId"] ."\"  $hiddenAnswerToolTip>" . $answer .'</span> ' . $detailLink  . $taskIndicator . '' . $description;
+	return "$difficultyEditable<span class=\"$editableStyle $tooltipClass answer $hiddenAnswerClass \" id=\"answer_" . $question["questionId"] ."\"  $hiddenAnswerToolTip>" . $answer .'</span> ' . $detailLink  . $taskIndicator . '' . $description;
 	/*
 	}
 	else{

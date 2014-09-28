@@ -45,268 +45,298 @@ debug($formBuilder);
 <body >
 <?php printMenu(false, $question["id"]); ?>
 <div class="container-fluid" id="question_detail">
-<form id="detailForm" method="post" action="">
-	<div class="row">
-		<div class="col-sm-1">
-		<?php if (isset($prevNext[0])){
-			echo '<a href="question_detail.php?id='. $prevNext[0] . '"><span class="glyphicon glyphicon-chevron-left" title="vorige"></span></a>';
-		 } ?>&nbsp;
-		</div>
-		<div class="col-sm-10 text-center">
-			<input type="submit" class="button" value="Bewaren" onclick="return saveFunction();"/>
-			<input type="reset"  value="Beginwaarden" onclick="return resetId();"/>
-			<input type="submit" id="deleteButton" value="Verwijderen" onclick="return deleteFunction();"/>
-			
-			<?php if($question["deleted"] == true) { ?>
-				<input type="submit" id="undeleteButton" value="Undelete" onclick="return undeleteFunction();"/>
-			<?php } else if ($question["id"] >0){ ?>
-			<?php } ?>
-				<input type="checkbox" checked="checked" id="autoSave"/><label for="autoSave" title="alle wijzigingen worden elke minuut automatisch bewaard">vraag automatisch bewaren</label>
-			
-			<?php $formBuilder->getHidden("id");
-			 $formBuilder->getHidden("table");
-			 $formBuilder->getHidden("param.isSpecial", "0");
-			 $formBuilder->getHidden("param.deleted", "0");
-			 if($question['parentId'] >0) {
-			 $formBuilder->getHidden("param.parentId");
-			 } ?>
-		</div>
-		<div class="col-sm-1">&nbsp;
-		<?php if (isset($prevNext[1])){
-			echo '<a href="question_detail.php?id='. $prevNext[1] . '"><span class="glyphicon glyphicon-chevron-right" title="volgende"></span></a>';
-		} ?>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-sm-12 text-center">
-			&nbsp;
-			<?php
-			if($question["parentId"] >0){
-				echo '<a href="question_detail.php?id=' . $question["parentId"] . '" >naar bovenliggende vraag</a>';
-			}
-			?>
-			<br/>
-			&nbsp;<span id="statusBox" style="padding: 2px;"></span>&nbsp;
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-2 col-sm-3">
-			<?php $formBuilder->getLabel("param.roundId", "Ronde"); ?>
-		</div><div class="col-md-2 col-sm-3">
-			<?php $formBuilder->getSelect("param.roundId",$rounds); ?>
-		</div><div class="col-md-2 col-sm-3">
-			<?php $formBuilder->getLabel("param.themaId", "thema"); ?>
-		</div><div class="col-md-2 col-sm-3">
-			<?php $formBuilder->getSelect("param.themaId", $themas); ?>
-		</div><div class="col-md-2 col-sm-3">
-			<?php $formBuilder->getLabel("param.difficulty", "moeilijkheidsgraad"); ?>
-		</div><div class="col-md-2 col-sm-3">
-			<?php $formBuilder->getSelect("param.difficulty",$difficulty); ?>
-		</div>
-		<?php if($question["isSpecial"]){ ?>
-			<div class="col-md-2 col-sm-3">
-				<?php $formBuilder->getLabel("param.sequence", "volgorde"); ?>
-			</div><div class="col-md-2 col-sm-3">
-			<?php $formBuilder->getText("param.sequence", 1); ?>
-			</div>
-		<?php } ?>
-	</div>
-	<div class="row">
-		<div class="col-md-2">
-			<?php $formBuilder->getLabel("param.description", "vraag"); ?>
-		</div><div class="col-md-10">
-			<?php $formBuilder->getTextArea("param.description", 10); ?>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-2">
-			<?php $formBuilder->getLabel("param.answer", "antwoord"); ?>
-		</div><div class="col-md-10">
-		<?php $formBuilder->getTextArea("param.answer", 1); ?>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-2">
-			<?php $formBuilder->getLabel("param.answerExtra", "extra uitleg"); ?>
-		</div><div class="col-md-10">
-			<?php $formBuilder->getTextArea("param.answerExtra", 2); ?>
-		</div>
-	</div>
-	<div class="row">
-		<?php if(isset($question["answer"]) && isNotBlank($question["answer"])){ ?>
-			<div class="col-md-6 text-center">
-				<?php
-				echo '<a target="_new" href="http://nl.wikipedia.org/wiki/' . str_replace(' ', '_', $question['answer']) . '">Wikipedia artikel</a> &nbsp;&nbsp;';
-				echo '<a target="_new" href="http://nl.wikipedia.org/wiki/Speciaal:Zoeken/' . $question['answer'] . '">Wikipedia zoeken</a>&nbsp;&nbsp;';
-				echo '<a target="_new" href="http://www.google.be/search?q=' . str_replace(' ', '+', $question['answer']) . '">Google zoeken</a> &nbsp;&nbsp;';
-				?>
-			</div>
-		<?php } ?>
-		<?php if( $question["id"] >= 0) { ?> 
-			<div class="col-md-3 text-center">
-				Aangemaakt door <i><?php echo $formBuilder->getValue("param.creationUser"); ?></i>
-				op <i><?php echo formatDate($formBuilder->getValue("param.creationDate")); ?></i>
-			</div>
-			<div class="col-md-3 text-center">
-				Laatst gewijzigd door <?php echo $formBuilder->getValue("param.modificationUser"); ?></i>
-				op <i><?php echo formatDate($formBuilder->getValue("param.modificationDate")); ?></i>
-			</div>
-		<?php } ?>
-	</div>
-</form>
-<?php
-		if($question['questionId'] > 0){
-			echo '<a href="question_detail.php?id=-1&parentId=' . $question["questionId"] .'">nieuwe deelvraag</a>';
-		}
-		if($question['childQuestions'] > 0){
-			echo "<h3>deelvragen:</h3>";
-
-			echo '<ul id="childQuestions" class="childQuestions">';
-			foreach($question["children"]  as $subQuestion){
-
-				echo '<li id="childQuestion_' . $subQuestion["questionId"] .'" class="moveable">' . formatAnswerForDetail($subQuestion) . '</li>';
-			}
-			echo'</ul>';
-		}
-
-	echo '<h3 id="notes">notities</h3>';
-	echo '<table class="table" id="tasks">';
-	if($question['taskCount'] > 0){
-		foreach($question['tasks'] as $task){
-				$readyButton = '';
-				if($task['done'] == false){
-					$readyButton = '<button id="task_' . $task['id'] . '" class="taskButton">klaar melden </button>';
-				}
-				$deleteButton = '<button id="deleteTask_' . $task['id'] . '" class="deleteTaskButton">verwijderen</button>';
-				$rowId= "row_" . $task['id'];
-				echo "<tr id=\"$rowId\">";
-				echo "<td>" . formatAuditInfo($task) . "</td>";
-				$taskDescr = linkify($task['description']);
-				$editableClass = "";
-				if(stripos($taskDescr, "a href") == false){
-					$editableClass= "editableTextArea"; 
-				}
-				echo "<td>" . $task['taskCategory'] . "</td><td><div class=\"$editableClass\" id=\"task_" .$task["id"] ."\">" . $taskDescr . "</div></td><td>&nbsp;$readyButton</td><td>$deleteButton</td></tr>";
-		}
-	}
-	echo "</table>";
-
-	$task = array();
-	$task["questionId"] = $question['questionId'];
-	$task["id"] = -1;
-	$task["done"] = 1;
-	$taskFormBuilder = new DetailFormBuilder($task, "task");
-	debug("task form builder", $taskFormBuilder);
-	?>
-<br/>
-<form id="newTaskForm"  >
-	<div class="row">
-		<div class="col-md-8 text-center">
-			<input type="submit" class="newTaskButton" value="Bewaren"/>
-			<input type="reset"  value="Beginwaarden"/>
-			<?php
-			$taskFormBuilder->getHidden("id");
-			$taskFormBuilder->getHidden("table");
-			$taskFormBuilder->getHidden("param.questionId");
-			?>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-2">
-		<?php $taskFormBuilder->getLabel("param.taskCategoryId", "categorie"); ?>
-		</div><div class="col-md-2">
-		<?php $taskFormBuilder->getSelect("param.taskCategoryId", $taskCategories); ?>
-		</div><div class="col-md-2">
-		<?php $taskFormBuilder->getLabel("param.done", "Actie nodig?"); ?>
-		</div><div class="col-md-2">
-		<?php
-			$actions = Array();
-			$actions[] = array("id"=>"0", "description"=> "Ja");
-			$actions[] = array("id"=>"1", "description"=> "Neen");
-
-			$taskFormBuilder->getSelect("param.done", $actions, array("title"=>"deze taak markeren dat er nog extra werk nodig is, die klaar gemeld kan worden"));
-		?>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-8">
-			<?php $taskFormBuilder->getTextArea("param.description", 2); ?>
-		</div>
-	</div>
-</form>
-<br />
-<h3 id="images">Afbeeldingen</h3>
-<form method="post" action="upload.php" enctype="multipart/form-data" onsubmit="return checkImage(this)" >
-	<input type="hidden" value="<?php echo $question['questionId'];?>"  name="questionId" id="imageQuestionId"/>
-	<div class="row"><div class="col-md-2"><label for="image_file">bestand</label></div><div class="col-md-2"><input type="file" name="image" id="image_file"/></div></div>
-	<div class="row"><div class="col-md-2"><label for="image_url" title="bijvoorbeeld http://www.goolge.com/logo.jpeg">web link</label></div><div class="col-md-2"><input type="text" name="url"	id="image_url" /></div></div>
-	<div class="row"><div class="col-md-4"><input type="submit" value="Afbeelding toevoegen" ></div></div>
-	
-</form>
-	<table class="table" id="images">
-	<?php
-		$images = coalesce($question['images'], Array());
-		debug("images", $images);
-		foreach($images as $img){
-			echo '<tr><td id="image_' . $img["id"] .'">';
-			echo formatImage($img, $question);
-			echo "</td><td>";
-			echo formatAuditInfo($img);
-			echo "</td><td>";
-			echo '<form method="post" action="upload.php" enctype="multipart/form-data">';
-			echo '<input type="hidden" value="' . $img['questionId'] . '"  name="questionId" />';
-			echo '<input type="hidden" value="' . $img['id'] . '"  name="id"/>';
-			echo '<input type="hidden" value="100"  name="sequence"/>';
-			echo '<input type="submit" value="Afbeelding verwijderen" />';
-			echo '<input type="hidden" name="delete" value="1" />';
-			echo '</form>';
-			echo '</td></tr>';
-		}
-	?>
-	</table>
-	
-	<form name="questionHistory" action="question_diff.php" >
-		<input type="hidden" name="mainId" value='<?php echo $question["id"]?>' />
-			<?php 
-			$history = coalesce($history, Array());
-			debug("history", $history);
-			$histLen = sizeof($history);
-			if($histLen>0){
-			?>
-				<table class="table" id="versions">
-				<tr><td colspan="2" valign="middle"><input type="submit" value="Vergelijk"/></td><td colspan="3" valign="middle"><br>&nbsp;vergelijk vorige versies<br>&nbsp;</td></tr>
-				<?php 
-				for($i=0; $i<$histLen; $i++){
-					$histQuestion = $history[$i];
-					$checkedLeft = "";
-					if($i==0){
-						$checkedLeft= ' checked="checked" ';
-					}
-					$checkedRight = "";
-					if($i==1){
-						$checkedRight= ' checked="checked" ';
-					}
+<div class="panel panel-default" id="question">
+	<div class="panel-body">
+		<form id="detailForm" method="post" action="">
+			<div class="row">
+				<div class="col-sm-1">
+				<?php if (isset($prevNext[0])){
+					echo '<a href="question_detail.php?id='. $prevNext[0] . '"><span class="glyphicon glyphicon-chevron-left" title="vorige"></span></a>';
+				 } ?>&nbsp;
+				</div>
+				<div class="col-sm-10 text-center">
+					<input type="submit" class="button" value="Bewaren" onclick="return saveFunction();"/>
+					<input type="reset"  value="Beginwaarden" onclick="return resetId();"/>
+					<input type="submit" id="deleteButton" value="Verwijderen" onclick="return deleteFunction();"/>
 					
-					echo '<tr>';
-					echo '<td class="versionRadioButton"><input type="radio" name="left"  ' . $checkedLeft  . ' value="' . $histQuestion['id'] . "\" /></td>\n";
-					echo '<td class="versionRadioButton"><input type="radio" name="right" ' . $checkedRight . ' value="' . $histQuestion['id'] . "\" /></td>\n";
-					echo '<td>' . $histQuestion["version"] . " </td><td> " . $histQuestion["creationUser"] . "</td>";
-					echo "<td>" . formatDate($histQuestion["creationDate"]) . "</td>\n";
-					if( $i < $histLen-1){
-						echo "<td>" . getChangedField($histQuestion, $history[$i+1]) . "</td>\n";
-					} else {
-						echo "<td>&nbsp;</td>\n";
+					<?php if($question["deleted"] == true) { ?>
+						<input type="submit" id="undeleteButton" value="Undelete" onclick="return undeleteFunction();"/>
+					<?php } else if ($question["id"] >0){ ?>
+					<?php } ?>
+						<input type="checkbox" checked="checked" id="autoSave"/><label for="autoSave" title="alle wijzigingen worden elke minuut automatisch bewaard">vraag automatisch bewaren</label>
+					
+					<?php $formBuilder->getHidden("id");
+					 $formBuilder->getHidden("table");
+					 $formBuilder->getHidden("param.isSpecial", "0");
+					 $formBuilder->getHidden("param.deleted", "0");
+					 if($question['parentId'] >0) {
+					 $formBuilder->getHidden("param.parentId");
+					 } ?>
+				</div>
+				<div class="col-sm-1">&nbsp;
+				<?php if (isset($prevNext[1])){
+					echo '<a href="question_detail.php?id='. $prevNext[1] . '"><span class="glyphicon glyphicon-chevron-right" title="volgende"></span></a>';
+				} ?>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12 text-center">
+					&nbsp;
+					<?php
+					if($question["parentId"] >0){
+						echo '<a href="question_detail.php?id=' . $question["parentId"] . '" >naar bovenliggende vraag</a>';
 					}
-					echo "</tr>\n";
+					?>
+					<br/>
+					&nbsp;<span id="statusBox" style="padding: 2px;"></span>&nbsp;
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2 col-sm-3">
+					<?php $formBuilder->getLabel("param.roundId", "Ronde"); ?>
+				</div><div class="col-md-2 col-sm-3">
+					<?php $formBuilder->getSelect("param.roundId",$rounds); ?>
+				</div><div class="col-md-2 col-sm-3">
+					<?php $formBuilder->getLabel("param.themaId", "thema"); ?>
+				</div><div class="col-md-2 col-sm-3">
+					<?php $formBuilder->getSelect("param.themaId", $themas); ?>
+				</div><div class="col-md-2 col-sm-3">
+					<?php $formBuilder->getLabel("param.difficulty", "moeilijkheidsgraad"); ?>
+				</div><div class="col-md-2 col-sm-3">
+					<?php $formBuilder->getSelect("param.difficulty",$difficulty); ?>
+				</div>
+			</div>
+			<?php if($question["isSpecial"]){ ?>
+				<div class="row">
+					<div class="col-md-2 col-sm-3">
+						<?php $formBuilder->getLabel("param.sequence", "volgorde"); ?>
+					</div><div class="col-md-2 col-sm-3">
+					<?php $formBuilder->getText("param.sequence", 1); ?>
+					</div>
+				</div>
+			<?php } ?>
+			<div class="row">
+				<div class="col-md-2">
+					<?php $formBuilder->getLabel("param.description", "vraag"); ?>
+				</div><div class="col-md-10">
+					<?php $formBuilder->getTextArea("param.description", 10); ?>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2">
+					<?php $formBuilder->getLabel("param.answer", "antwoord"); ?>
+				</div><div class="col-md-10">
+				<?php $formBuilder->getTextArea("param.answer", 1); ?>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2">
+					<?php $formBuilder->getLabel("param.answerExtra", "extra uitleg"); ?>
+				</div><div class="col-md-10">
+					<?php $formBuilder->getTextArea("param.answerExtra", 2); ?>
+				</div>
+			</div>
+			<div class="row">
+				<?php if(isset($question["answer"]) && isNotBlank($question["answer"])){ ?>
+					<div class="col-md-6 text-center">
+						<?php
+						echo '<a target="_new" href="http://nl.wikipedia.org/wiki/' . str_replace(' ', '_', $question['answer']) . '">Wikipedia artikel</a> &nbsp;&nbsp;';
+						echo '<a target="_new" href="http://nl.wikipedia.org/wiki/Speciaal:Zoeken/' . $question['answer'] . '">Wikipedia zoeken</a>&nbsp;&nbsp;';
+						echo '<a target="_new" href="http://www.google.be/search?q=' . str_replace(' ', '+', $question['answer']) . '">Google zoeken</a> &nbsp;&nbsp;';
+						?>
+					</div>
+				<?php } ?>
+				<?php if( $question["id"] >= 0) { ?> 
+					<div class="col-md-3 text-center">
+						Aangemaakt door <i><?php echo $formBuilder->getValue("param.creationUser"); ?></i>
+						op <i><?php echo formatDate($formBuilder->getValue("param.creationDate")); ?></i>
+					</div>
+					<div class="col-md-3 text-center">
+						Laatst gewijzigd door <?php echo $formBuilder->getValue("param.modificationUser"); ?></i>
+						op <i><?php echo formatDate($formBuilder->getValue("param.modificationDate")); ?></i>
+					</div>
+				<?php } ?>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="panel panel-default" id="children">
+	<div class="panel-heading"><h3 class="panel-title">Deelvragen</h3></div>
+	<div class="panel-body">
+		<?php
+			if($question['questionId'] > 0){
+				echo '<a href="question_detail.php?id=-1&parentId=' . $question["questionId"] .'">nieuwe deelvraag</a>';
+			}
+			if($question['childQuestions'] > 0){
+				echo "<h3>deelvragen:</h3>";
+	
+				echo '<ul id="childQuestions" class="childQuestions">';
+				foreach($question["children"]  as $subQuestion){
+	
+					echo '<li id="childQuestion_' . $subQuestion["questionId"] .'" class="moveable">' . formatAnswerForDetail($subQuestion) . '</li>';
 				}
+				echo'</ul>';
+			}
+		?>
+	</div>
+</div>
+<div class="panel panel-default" id="notes">
+	<div class="panel-heading"><h3 class="panel-title">Notities</h3></div>
+	<div class="panel-body medium-width">
+		<?php
+		echo '<table class="table" id="tasks">';
+		if($question['taskCount'] > 0){
+			foreach($question['tasks'] as $task){
+					$readyButton = '';
+					if($task['done'] == false){
+						$readyButton = '<button id="taskButton_' . $task['id'] . '" class="taskButton">klaar melden </button>';
+					}
+					$deleteButton = '<button id="deleteTask_' . $task['id'] . '" class="deleteTaskButton">verwijderen</button>';
+					$rowId= "row_" . $task['id'];
+					echo "<tr id=\"$rowId\">";
+					echo "<td>" . formatAuditInfo($task) . "</td>";
+					$taskDescr = linkify($task['description']);
+					$editableClass = "";
+					if(stripos($taskDescr, "a href") == false){
+						$editableClass= "editableTextArea"; 
+					}
+					echo "<td>" . $task['taskCategory'] . "</td><td><div class=\"$editableClass\" id=\"task_" .$task["id"] ."\">" . $taskDescr . "</div></td><td>&nbsp;$readyButton</td><td>$deleteButton</td></tr>";
+			}
+		}
+		echo "</table>";
+	
+		$task = array();
+		$task["questionId"] = $question['questionId'];
+		$task["id"] = -1;
+		$task["done"] = 1;
+		$taskFormBuilder = new DetailFormBuilder($task, "task");
+		debug("task form builder", $taskFormBuilder);
+		?>
+		<br/>
+		<form id="newTaskForm"  >
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<input type="submit" class="newTaskButton" value="Bewaren"/>
+					<input type="reset"  value="Beginwaarden"/>
+					<?php
+					$taskFormBuilder->getHidden("id");
+					$taskFormBuilder->getHidden("table");
+					$taskFormBuilder->getHidden("param.questionId");
+					?>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-3">
+				<?php $taskFormBuilder->getLabel("param.taskCategoryId", "categorie"); ?>
+				</div><div class="col-md-3">
+				<?php $taskFormBuilder->getSelect("param.taskCategoryId", $taskCategories); ?>
+				</div><div class="col-md-3">
+				<?php $taskFormBuilder->getLabel("param.done", "Actie nodig?"); ?>
+				</div><div class="col-md-3">
+				<?php
+					$actions = Array();
+					$actions[] = array("id"=>"0", "description"=> "Ja");
+					$actions[] = array("id"=>"1", "description"=> "Neen");
+		
+					$taskFormBuilder->getSelect("param.done", $actions, array("title"=>"deze taak markeren dat er nog extra werk nodig is, die klaar gemeld kan worden"));
 				?>
-			<tr><td colspan="2" valign="middle"><input type="submit" value="Vergelijk"/></td><td colspan="4" valign="middle"><br>&nbsp;<br>&nbsp;</td></tr>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<?php $taskFormBuilder->getTextArea("param.description", 2); ?>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="panel panel-default" id="images">
+	<div class="panel-heading"><h3 class="panel-title">Afbeeldingen</h3></div>
+	<div class="panel-body medium-width">
+		<form method="post" action="upload.php" enctype="multipart/form-data" onsubmit="return checkImage(this)" >
+			<input type="hidden" value="<?php echo $question['questionId'];?>"  name="questionId" id="imageQuestionId"/>
+			<div class="row">
+				<div class="col-md-6"><label for="image_file">bestand</label></div>
+				<div class="col-md-6"><input type="file" name="image" id="image_file"/></div>
+			</div>
+			<div class="row">
+				<div class="col-md-6"><label for="image_url" title="bijvoorbeeld http://www.goolge.com/logo.jpeg">web link</label></div>
+				<div class="col-md-6"><input type="text" name="url"	id="image_url" /></div>
+			</div>
+			<div class="row">
+				<div class="col-md-12"><input type="submit" value="Afbeelding toevoegen" ></div>
+			</div>
+			
+		</form>
+		<table class="table" id="images">
+		<?php
+			$images = coalesce($question['images'], Array());
+			debug("images", $images);
+			foreach($images as $img){
+				echo '<tr><td id="image_' . $img["id"] .'">';
+				echo formatImage($img, $question);
+				echo "</td><td>";
+				echo formatAuditInfo($img);
+				echo "</td><td>";
+				echo '<form method="post" action="upload.php" enctype="multipart/form-data">';
+				echo '<input type="hidden" value="' . $img['questionId'] . '"  name="questionId" />';
+				echo '<input type="hidden" value="' . $img['id'] . '"  name="id"/>';
+				echo '<input type="hidden" value="100"  name="sequence"/>';
+				echo '<input type="submit" value="Afbeelding verwijderen" />';
+				echo '<input type="hidden" name="delete" value="1" />';
+				echo '</form>';
+				echo '</td></tr>';
+			}
+		?>
+		</table>
+	</div>
+</div>
+<div class="panel panel-default" id="diff">
+	<div class="panel-heading"><h3 class="panel-title">Geschiedenis</h3></div>
+	<div class="panel-body medium-width">
+		<form name="questionHistory" action="question_diff.php" >
+			<input type="hidden" name="mainId" value='<?php echo $question["id"]?>' />
+				<?php 
+				$history = coalesce($history, Array());
+				debug("history", $history);
+				$histLen = sizeof($history);
+				if($histLen>0){
+				?>
+					<table class="table" id="versions">
+					<tr><td colspan="6" valign="middle"><input type="submit" value="Vergelijk versies"/></td></tr>
+					<?php 
+					for($i=0; $i<$histLen; $i++){
+						$histQuestion = $history[$i];
+						$checkedLeft = "";
+						if($i==0){
+							$checkedLeft= ' checked="checked" ';
+						}
+						$checkedRight = "";
+						if($i==1){
+							$checkedRight= ' checked="checked" ';
+						}
+						
+						echo '<tr>';
+						echo '<td class="versionRadioButton"><input type="radio" name="left"  ' . $checkedLeft  . ' value="' . $histQuestion['id'] . "\" /></td>\n";
+						echo '<td class="versionRadioButton"><input type="radio" name="right" ' . $checkedRight . ' value="' . $histQuestion['id'] . "\" /></td>\n";
+						echo '<td>' . $histQuestion["version"] . " </td><td> " . $histQuestion["creationUser"] . "</td>";
+						echo "<td>" . formatDate($histQuestion["creationDate"]) . "</td>\n";
+						if( $i < $histLen-1){
+							echo "<td>" . getChangedField($histQuestion, $history[$i+1]) . "</td>\n";
+						} else {
+							echo "<td>&nbsp;</td>\n";
+						}
+						echo "</tr>\n";
+					}
+					?>
+					<tr><td colspan="6" valign="middle"><input type="submit" value="Vergelijk versies"/></td></tr>
 				</table>
 				<?php 
 			}
 			?>
-	</form>
-
+		</form>
+	</div>
+</div>
 <script type="text/javascript">
 function resetId(){
 	$("#<?php echo $formBuilder->getId("id");?>")[0].value ='<?php echo $question['questionId'];?>';
@@ -349,7 +379,7 @@ var saveFunction = function(auto) {
 
 	oldUpdateInfo = updateInfo;
 
-	$.post("save.php", updateInfo , function(data){
+	$.post("save_data.php", updateInfo , function(data){
 		var splitted =	data.split("id: ");
 		debug(data);
 
@@ -375,7 +405,7 @@ var undeleteFunction = function(){
 	var answerId = $("#<?php echo $formBuilder->getId("id");?>")[0].value;
 
 	var updateInfo = { "detail[table]": 'question', "detail[id]": answerId, "detail[action]":"undelete" };
-	$.post("save.php", updateInfo , function(data){
+	$.post("save_data.php", updateInfo , function(data){
 		debug(data);
 	});
 	$("#undeleteButton")[0].disabled = true;
@@ -395,7 +425,7 @@ var deleteFunction = function() {
 
 	$("#autoSave")[0].checked = false;
 
-	$.post("save.php", updateInfo , function(data){
+	$.post("save_data.php", updateInfo , function(data){
 			// debug("Data Loaded: " + data, "id:", splitted[splitted.length-1]);
 			$("#autoSave")[0].checked = false;
 			alert("Vraag verwijderd");
@@ -418,7 +448,7 @@ var deleteTaskFunction = function() {
 		return false;
 	}
 
-	$.post("save.php", updateInfo , function(data){
+	$.post("save_data.php", updateInfo , function(data){
 			rowId = "#row_" + taskId;
 			$(rowId).hide();
 			showStatus("Taak verwijderd");
@@ -432,8 +462,9 @@ var updateTaskFunction = function(){
 	var updateInfo = { "detail[table]": 'task', "detail[id]": taskId };
 	updateInfo["detail[param][done]"] = 1;
 
-	$.post("save.php", updateInfo , function(data){
-			$("#" +  buttonId).hide();
+	$.post("save_data.php", updateInfo , function(data){
+			console.log("task updated, hiding " + buttonId);
+			$("#" + buttonId).hide();
 	});
 };
 
@@ -449,7 +480,7 @@ var updateSavedTaskFunction = function(formId){
 		cat = catBox.options[catBox.selectedIndex].text;
 	}
 	form.reset();
-	$('#taskTable').append('<tr><td>&nbsp;</td><td>' + cat +'</td><td>' + description + '</td><td>' + done + '</td><td>&nbsp;</td></tr>');
+	$('table#tasks').append('<tr><td>&nbsp;</td><td>' + cat +'</td><td>' + description + '</td><td>' + done + '</td><td>&nbsp;</td></tr>');
 };
 
 var saveTaskFunction = function() {
@@ -469,7 +500,7 @@ var saveTaskFunction = function() {
 	});
 
 	debug(data, 	updateInfo, $(formId));
-	$.post("save.php", updateInfo , function(data){
+	$.post("save_data.php", updateInfo , function(data){
 		var splitted =	data.split("id: "),
 			taskId = splitted[splitted.length-1];
 		debug("Data Loaded: " + data, "id:", taskId);
@@ -528,14 +559,15 @@ $(document).ready(function() {
 
 	window.onbeforeunload = checkFormDirty;   
 
-	installUpdateSequence('#childQuestions', ".answer", "question");
-	installUpdateSequence('#images', "li", "image");
+	// installUpdateSequence('#childQuestions', ".answer", "question");
+	// installUpdateSequence('#images', "li", "image");
 
-	$( ".editableTextArea" ).eip( "save.php", {
-		form_type: "textarea",
-		editfield_class: "textInput",
-		getUpdateData: updateTaskDescription
-	} );
+	//TODO
+// 	$( ".editableTextArea" ).eip( "save_data.php", {
+// 		form_type: "textarea",
+// 		editfield_class: "textInput",
+// 		getUpdateData: updateTaskDescription
+// 	} );
 	
 	debug("end loading doc");
 
