@@ -100,37 +100,37 @@ include ("php/question_selector.php");
 			return updateInfo;
 		}
 
-// 		$(document).ready(function(){
-// 			$( ".editableTextArea" ).eip( "save_data.php", {
-// 				form_type: "textarea",
-// 				editfield_class: "textInput",
-// 				getUpdateData: getUpdateData
-// 			} );
+//			$(document).ready(function(){
+//				$( ".editableTextArea" ).eip( "save_data.php", {
+//					form_type: "textarea",
+//					editfield_class: "textInput",
+//					getUpdateData: getUpdateData
+//				} );
 
-// 			$( ".editableText" ).eip( "save_data.php", {
-// 				form_type: "text",
-// 				editfield_class: "textInput",
-// 				getUpdateData: getUpdateData
-// 			} );
+//				$( ".editableText" ).eip( "save_data.php", {
+//					form_type: "text",
+//					editfield_class: "textInput",
+//					getUpdateData: getUpdateData
+//				} );
 
-// 			$( ".editableSelect" ).eip( "save_data.php", {
-// 				form_type: "select",
-// 				select_options: {
+//				$( ".editableSelect" ).eip( "save_data.php", {
+//					form_type: "select",
+//					select_options: {
 					<?php
-// 				  for($i = 0; $i < count($difficulties)-1; $i++) {
-// 						$diff = $difficulties[$i];
-// 						echo $diff["id"] . ": '". $diff["description"] . "',";
-// 					}
-// 					$diff = $difficulties[count($difficulties)-1];
-// 						echo $diff["id"] . ": '". $diff["description"] ."'";
-// 					?>
-// 				},
-// 				getUpdateData: getUpdateData,
-// 				after_save: function(self){
-// 					self.className =updateDifficulty(self.className, $(self).html());
-// 				}
-// 			} );
-// 		});
+//					  for($i = 0; $i < count($difficulties)-1; $i++) {
+//							$diff = $difficulties[$i];
+//							echo $diff["id"] . ": '". $diff["description"] . "',";
+//						}
+//						$diff = $difficulties[count($difficulties)-1];
+//							echo $diff["id"] . ": '". $diff["description"] ."'";
+//						?>
+//					},
+//					getUpdateData: getUpdateData,
+//					after_save: function(self){
+//						self.className =updateDifficulty(self.className, $(self).html());
+//					}
+//				} );
+//			});
 
 
 			</script>

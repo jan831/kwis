@@ -172,11 +172,11 @@ function changeIsSpecial(checkBox){
 }
 
  $(function() {
-// 	$( ".editableText" ).eip( "save_data.php", {
-// 		form_type: "text",
-// 		form_buttons		: '<span><input type="button" id="save-#{id}" class="#{savebutton_class}" value="#{savebutton_text}" /> <input type="button" id="cancel-#{id}" class="#{cancelbutton_class}" value="#{cancelbutton_text}" /><button id="delete-#{id}"  value="verwijderen" onclick="deleteRound(this);" >Verwijderen</button></span>',
-// 		editfield_class: "textInput"
-// 	} );
+//		$( ".editableText" ).eip( "save_data.php", {
+//			form_type: "text",
+//			form_buttons		: '<span><input type="button" id="save-#{id}" class="#{savebutton_class}" value="#{savebutton_text}" /> <input type="button" id="cancel-#{id}" class="#{cancelbutton_class}" value="#{cancelbutton_text}" /><button id="delete-#{id}"  value="verwijderen" onclick="deleteRound(this);" >Verwijderen</button></span>',
+//			editfield_class: "textInput"
+//		} );
 	$(".glyphicon-trash").click(deleteRound);
 	installUpdateSequence('#rounds', "li", "round");
 });

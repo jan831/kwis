@@ -89,7 +89,7 @@ printHeader("vragen lijst"); ?>
 					$formBuilder->getCheckBox("ui.showImage");
 					$formBuilder->getLabel("ui.showImage", "afbeelding");
 					echo "<br/>";
-		 		?>
+					?>
 				</div>
 				<div class="col-md-3">
 					<?php $formBuilder->getLabel("param.taskCategory", "toon vragen <i>met</i> de volgende notities"); ?>

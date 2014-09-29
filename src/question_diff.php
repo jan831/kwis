@@ -55,11 +55,11 @@ else {
 <table>
 <?php
 	global $questionFields;
- 	$changedFields ="";
- 	debug("getChangedField");
- 	foreach ($questionFields as $key => $value){
+		$changedFields ="";
+		debug("getChangedField");
+		foreach ($questionFields as $key => $value){
 		$from_text = str_replace('&nbsp;', ' ', $left[$key]);
-    		$to_text = str_replace('&nbsp;', ' ', $right[$key]);
+			$to_text = str_replace('&nbsp;', ' ', $right[$key]);
 		$diff = new FineDiff($from_text, $to_text, FineDiff::$wordGranularity);
 		echo "<tr><td style='width: 200px;'>" . $value . "</td><td colspan='2'>" . $diff->renderDiffToHTML() . "</td></tr>\n";
 	}

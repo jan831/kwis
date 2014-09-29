@@ -89,7 +89,7 @@ printMenu(true);
 				<div class="col-md-8">
 					<?php
 						$defaultThemas = Array("Actua", "Geschiedenis", "Aardrijkskunde", "Sport", "Muziek", "Media & TV", "Wetenschap", "Kunst & Cultuur", "Literatuur", "Eten & Drinken","Strips", "Fauna & Flora", "Globo", "3pts vraag");
-					 	$formBuilder->getText("param.description", $defaultThemas);
+							$formBuilder->getText("param.description", $defaultThemas);
 					 ?>
 				</div>
 			</div>
@@ -158,11 +158,11 @@ function deleteThema(event){
 
 
  $(function() {
-// 	$( ".editableText" ).eip( "save_data.php", {
-// 		form_type: "text",
-// 		form_buttons		: '<span><input type="button" id="save-#{id}" class="#{savebutton_class}" value="#{savebutton_text}" /> <input type="button" id="cancel-#{id}" class="#{cancelbutton_class}" value="#{cancelbutton_text}" /><button id="delete-#{id}"  value="verwijderen" onclick="deleteThema(this);" >Verwijderen</button></span>',
-// 		editfield_class: "textInput"
-// 	} );
+//		$( ".editableText" ).eip( "save_data.php", {
+//			form_type: "text",
+//			form_buttons		: '<span><input type="button" id="save-#{id}" class="#{savebutton_class}" value="#{savebutton_text}" /> <input type="button" id="cancel-#{id}" class="#{cancelbutton_class}" value="#{cancelbutton_text}" /><button id="delete-#{id}"  value="verwijderen" onclick="deleteThema(this);" >Verwijderen</button></span>',
+//			editfield_class: "textInput"
+//		} );
 
 	$(".glyphicon-trash").click(deleteThema);
 	installUpdateSequence('#themas', "li", "thema");

@@ -469,7 +469,7 @@ var updateTaskFunction = function(){
 };
 
 var updateSavedTaskFunction = function(formId){
-	var form = 	$("#newTaskForm")[0];
+	var form =		$("#newTaskForm")[0];
 	var doneBox =  $("#<?php echo $taskFormBuilder->getId("param.done");?>")[0];
 	var done = doneBox.options[doneBox.selectedIndex].text;
 	var description = $("#<?php echo $taskFormBuilder->getId("param.description");?>")[0].value;
@@ -488,7 +488,7 @@ var saveTaskFunction = function() {
 
 	// validate and process form here
 	if(	$("#<?php echo $taskFormBuilder->getId("param.questionId");?>")[0].value <= 0 ){
-   		alert("Taak kan niet bewaard worden, gelieve eerst de vraag te bewaren.");
+			alert("Taak kan niet bewaard worden, gelieve eerst de vraag te bewaren.");
 		return false;
 	}
 	var data =$(formId).serializeArray();
@@ -499,7 +499,7 @@ var saveTaskFunction = function() {
 		updateInfo[this.name] = this.value;
 	});
 
-	debug(data, 	updateInfo, $(formId));
+	debug(data,		updateInfo, $(formId));
 	$.post("save_data.php", updateInfo , function(data){
 		var splitted =	data.split("id: "),
 			taskId = splitted[splitted.length-1];
@@ -563,11 +563,11 @@ $(document).ready(function() {
 	// installUpdateSequence('#images', "li", "image");
 
 	//TODO
-// 	$( ".editableTextArea" ).eip( "save_data.php", {
-// 		form_type: "textarea",
-// 		editfield_class: "textInput",
-// 		getUpdateData: updateTaskDescription
-// 	} );
+//		$( ".editableTextArea" ).eip( "save_data.php", {
+//			form_type: "textarea",
+//			editfield_class: "textInput",
+//			getUpdateData: updateTaskDescription
+//		} );
 	
 	debug("end loading doc");
 

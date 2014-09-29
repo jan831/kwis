@@ -128,17 +128,17 @@ function executeScript($fileName){
 
 	$query = "";
 	while(!feof($handle)) {
-	    $sql_line = fgets($handle);
-	    if (trim($sql_line) != "" && strpos($sql_line, "--") === false) {
-	        $query .= $sql_line;
-	        $sql_line = null;
-	        if (preg_match("/.*;\s*\$/", $query)) {
-	        	$query = str_replace("TABLE_PREFIX_", TABLE_PREFIX_, $query);
-	        	debug($query) ;
-	            $result = $dbLink->query($query) or die($dbLink->error . "\n" . $query);
-	            $query = "";
-	        }
-	    }
+		$sql_line = fgets($handle);
+		if (trim($sql_line) != "" && strpos($sql_line, "--") === false) {
+			$query .= $sql_line;
+			$sql_line = null;
+			if (preg_match("/.*;\s*\$/", $query)) {
+				$query = str_replace("TABLE_PREFIX_", TABLE_PREFIX_, $query);
+				debug($query) ;
+				$result = $dbLink->query($query) or die($dbLink->error . "\n" . $query);
+				$query = "";
+			}
+		}
 	}
 }
 

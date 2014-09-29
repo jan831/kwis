@@ -681,7 +681,7 @@ class FineDiff {
 			echo '<del>', (($deletion)), '</del>';
 			}
 		else /* if ( $opcode === 'i' ) */ {
- 			echo '<ins>', ((substr($from, $from_offset, $from_len))), '</ins>';
+				echo '<ins>', ((substr($from, $from_offset, $from_len))), '</ins>';
 			}
 		}
 	}

@@ -71,7 +71,7 @@ function select($selector){
 			}
 			else if (isset($value)){
 				// debug("adding slashes to -|" . $value . "|-");
-// 				$value = $dbLink->escape_string($value);
+//					$value = $dbLink->escape_string($value);
 				$query .= " and " . $value;
 			}
 		}
@@ -331,7 +331,7 @@ function isNotBlank($str){
 
 function linkify($text) {
 	return preg_replace('#(\A|[^=\]\'"a-zA-Z0-9])(http[s]?://(.+?)/[^()<>\s]+)#i', '\\1<a href="\\2" target="_blank" >\\2</a>', $text);
-// 	return  preg_replace("[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", $text);
+//		return  preg_replace("[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", $text);
 }
 
 function debug($var){

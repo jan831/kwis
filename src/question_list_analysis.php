@@ -120,7 +120,7 @@ printHeader("Analyze"); ?>
 <script type="text/javascript">
 var save = function(){
 	var updateInfo = { multiple: true, data: null};
-  	updateInfo.data = Array();
+		updateInfo.data = Array();
 	$(".correctAnswers").each(function(){
 		var elementId = this.id.split('_')[1];
 		debug(this, elementId);

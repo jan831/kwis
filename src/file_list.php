@@ -23,7 +23,7 @@ echo "<body>";
 printMenu(true);
 echo '<div class="container-fluid">';
 	global $debug;
-// 	$debug = true;
+//		$debug = true;
 	$rounds = selectRounds();
 	$results = selectFilesForList();
 	$difficulties = selectDifficulty();
@@ -69,7 +69,7 @@ echo '<div class="container-fluid">';
 			<div class="panel-heading"><h3 class="panel-title">File toevoegen</h3></div>
 			<div class="panel-body medium-width">
 			<form method="post" action="file_upload.php" enctype="multipart/form-data" id="uploadForm">
-				<input type="hidden" id="form_delete" 	name="delete" value="">
+				<input type="hidden" id="form_delete"		name="delete" value="">
 				<input type="hidden" id="form_id"		name="id" value="">
 				<div class="row">
 					<div class="col-md-4 text-center"><input type="submit" value="File toevoegen" ></div>
@@ -117,19 +117,19 @@ echo '<div class="container-fluid">';
 				$("#uploadForm")[0].submit();
 			}
 
-// 			$(document).ready(function(){
-// 				$( ".editableTextArea" ).eip( "save_data.php", {
-// 					form_type: "textarea",
-// 					editfield_class: "textInput",
-// 					getUpdateData: getUpdateData
-// 				} );
+//				$(document).ready(function(){
+//					$( ".editableTextArea" ).eip( "save_data.php", {
+//						form_type: "textarea",
+//						editfield_class: "textInput",
+//						getUpdateData: getUpdateData
+//					} );
 
-// 				$( ".editableText" ).eip( "save_data.php", {
-// 					form_type: "text",
-// 					editfield_class: "textInput",
-// 					getUpdateData: getUpdateData
-// 				} );
-// 			});
+//					$( ".editableText" ).eip( "save_data.php", {
+//						form_type: "text",
+//						editfield_class: "textInput",
+//						getUpdateData: getUpdateData
+//					} );
+//				});
 
 
 			</script>

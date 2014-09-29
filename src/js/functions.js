@@ -92,8 +92,8 @@ function myhandler_dropped(node, cellNode){
 	debug(answerNode, cellNode,  updateInfo );
 
 	$.post("save_data.php", updateInfo , function(data){
- 			showStatus("vraag aangepast");
-		 	updateDifficulties();
+				showStatus("vraag aangepast");
+				updateDifficulties();
 	});
 }
 function updateLayout(){
@@ -165,7 +165,7 @@ function getFormData(formId){
 		updateInfo[this.name] = this.value;
 	});
 	
-	debug(data, 	updateInfo, $(formId));
+	debug(data,		updateInfo, $(formId));
 	return updateInfo;
 }
 
@@ -222,13 +222,24 @@ function updateSequence(listSelector, elementSelector, tableName){
 
 	
 $(document).ready(function(){
-	$(".hasToolTip").tooltip({
-		items:  ".hasToolTip",
-		content : function() { 
+	$('.hasToolTip').tooltip({
+		container:  "body",
+		html: true,
+		placement: 'auto',
+	});
+	
+	$(".hasHtmlToolTip").tooltip({
+		container:  "body",
+		html: true,
+		placement: 'auto',
+		title : function() { 
+			console.log(this.id);
 			if( $("#tooltip_" + this.id).length == 1)
 				return $("#tooltip_" + this.id).html(); 
-			else
-		  		return null;
+			else{
+				debug("no tooltip html found for ", this);
+				return null;
+			}
 		} 
 	});
 

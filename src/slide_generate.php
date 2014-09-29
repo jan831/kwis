@@ -66,7 +66,7 @@ function printSlide( $question, $image, $isSubQuestion, $parentQuestion = null){
 	'<draw:frame presentation:style-name="pr4" draw:text-style-name="P1" draw:layer="layout" svg:width="25.199cm" svg:height="3.256cm" svg:x="1.4cm" svg:y="0.962cm"
 	presentation:class="title"><draw:text-box><text:p text:style-name="P1">' . $title . '</text:p></draw:text-box></draw:frame>'.
 	'<draw:frame draw:style-name="gr2" draw:text-style-name="P3" draw:layer="layout" svg:width="'.$width.'cm" svg:height="'.$height.'cm" svg:x="'.$x.'cm" svg:y="'.$y.'cm">' .
-	'<draw:image	 	xlink:href="' . $img .'"		xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"><text:p text:style-name="P1"/></draw:image></draw:frame>';
+	'<draw:image			xlink:href="' . $img .'"		xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"><text:p text:style-name="P1"/></draw:image></draw:frame>';
 
 	if($question["imageCount"] >1){
 		$xmlContent.= '<draw:frame draw:style-name="gr3" draw:text-style-name="P4" draw:layer="layout" svg:width="2.161cm" svg:height="0.962cm" svg:x="0.339cm" svg:y="20.038cm"><draw:text-box>' .

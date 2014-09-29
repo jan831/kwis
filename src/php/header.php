@@ -72,12 +72,6 @@ function printHeader($title = null){
 	<link href="css/print.css" rel="stylesheet" media="print"></link>
 	<script src="js/functions.js"></script>
 	
-	<script type="text/javascript">
-	$(document).ready(function(){
-		console.log("doc ready");
-		$('.hasToolTip').tooltip();
-	});
-	</script>
   </head>
 <? }
 
@@ -109,8 +103,8 @@ if($questionId != null)
 			<li class="<?php echo isCurPage('question_list.php');?>">
 				<a href="question_list.php<?php echo $questionAnchor;?>"  id="menu_list" >vragen lijst</a>
 			</li>
-			<li class="<?php echo isCurPage('todo.php');?>">
-				<a href="todo.php"  id="menu_todo" >notities</a>
+			<li class="<?php echo isCurPage('todo_list.php');?>">
+				<a href="todo_list.php"  id="menu_todo" >notities</a>
 			</li>
 			<li class="<?php echo isCurPage('matrix.php');?>">
 				<a href="matrix.php"  id="menu_matrix" >overzicht</a>
@@ -204,7 +198,7 @@ if(endsWith($action, "logoff")){
 	?>
 	</td></tr>
 	<tr><td>gebruikersnaam</td><td>
-	<input type="text" 		name="user" value="<?php echo $user ?>" />
+	<input type="text"			name="user" value="<?php echo $user ?>" />
 	</td></tr>
 	<tr><td>paswoord</td><td>
 	<input type="password"	name="password" />
@@ -235,10 +229,10 @@ else{
 
 function isCurPage($page) {
  if(substr($_SERVER["REQUEST_URI"],strrpos($_SERVER["REQUEST_URI"],"/")+1) == $page){
- 	return "active";
+		return "active";
  }
  else{
- 	return "";
+		return "";
  }
 }
 
@@ -290,7 +284,7 @@ debug($options);
 	$tooltipClass = "";
 	if($showHiddenQuestion == true){
 		$description = '<div class="hidden" id="tooltip_answer_' . $question["questionId"]  .'">' .nl2br( $question['description']) . '</div>';
-		$tooltipClass = "hasToolTip";
+		$tooltipClass = "hasHtmlToolTip";
 	}
 
 	$hiddenAnswerClass = "";
@@ -349,11 +343,11 @@ function formatAnswerForMatrix($question, $print){
  }
 
  function formatDate($date){
- 	$ts = strtotime($date);
- 	if($ts==0)
- 		return "";
- 	else
- 		return date ('d/m/Y H:i:s', $ts);
+		$ts = strtotime($date);
+		if($ts==0)
+			return "";
+		else
+			return date ('d/m/Y H:i:s', $ts);
  }
 
  function formatAuditInfo($object){
@@ -371,22 +365,22 @@ function formatAnswerForMatrix($question, $print){
  $questionFields["thema"] = "thema";
  $questionFields["difficulty"] = "moeilijkheidsgraad";
  function getChangedField($question1, $question2){
- 	if($question1 ==null || $question2 == null){
- 		return "";
- 	} 
- 	
- 	global $questionFields;
- 	$changedFields ="";
- 	debug("getChangedField");
- 	foreach ($questionFields as $key => $value){
- 		debug("field " . $value, $question1[$key] , $question2[$key]);
- 		if($question1[$key] != $question2[$key]){
- 			if(strlen($changedFields) >0){
+		if($question1 ==null || $question2 == null){
+			return "";
+		} 
+		
+		global $questionFields;
+		$changedFields ="";
+		debug("getChangedField");
+		foreach ($questionFields as $key => $value){
+			debug("field " . $value, $question1[$key] , $question2[$key]);
+			if($question1[$key] != $question2[$key]){
+				if(strlen($changedFields) >0){
 				$changedFields .= ', ';
 			}
 			$changedFields .= $value;
- 		}
- 	}
- 	return $changedFields;
+			}
+		}
+		return $changedFields;
  }
  ?>

@@ -94,20 +94,20 @@ $results = selectQuestionsForList($selector);
 	var deleteQuestions = function() {
       // validate and process form here
 
-	  	var updateInfo = { multiple: true, data: null};
-	  	updateInfo.data = Array();
+			var updateInfo = { multiple: true, data: null};
+			updateInfo.data = Array();
 
-	  	var confirmResult = confirm("Vragen verwijderen?  alle deelvragen en notities worden mee verwijderd!");
+			var confirmResult = confirm("Vragen verwijderen?  alle deelvragen en notities worden mee verwijderd!");
 
 		if( !confirmResult){
 			return false;
 		}
 		
-	  	var questionSelection = $(".questionCheck");
+			var questionSelection = $(".questionCheck");
 		var numSelected=0;
-	  	for(var i=0; i< questionSelection.length; i++){
-	  		if(questionSelection[i].checked){
-		  		var questionId = questionSelection[i].id.split('_')[1];
+			for(var i=0; i< questionSelection.length; i++){
+				if(questionSelection[i].checked){
+					var questionId = questionSelection[i].id.split('_')[1];
 				numSelected++;
 				updateInfo["data[" +i +"][table]"] = 'question';
 				updateInfo["data[" +i +"][action]"] = 'delete';
@@ -116,7 +116,7 @@ $results = selectQuestionsForList($selector);
 		}
 
 		 $.post("save_data.php", updateInfo , function(data){
- 			alert(numSelected + " vragen verwijderd");
+				alert(numSelected + " vragen verwijderd");
 			window.location="./question_list_delete.php";
 		});
 
@@ -125,18 +125,18 @@ $results = selectQuestionsForList($selector);
 
     var selectAll = function(event){
 		var checked = event.currentTarget.checked;
-	  	var questionSelection = $(".questionCheck");
-	  	for(var i=0; i< questionSelection.length; i++){
-	  		questionSelection[i].checked = checked;
-	  	}
+			var questionSelection = $(".questionCheck");
+			for(var i=0; i< questionSelection.length; i++){
+				questionSelection[i].checked = checked;
+			}
 	};
 
 	var selectAll = function(event){
 		var checked = event.currentTarget.checked;
-	  	var questionSelection = $(".questionCheck");
-	  	for(var i=0; i< questionSelection.length; i++){
-	  		questionSelection[i].checked = checked;
-	  	}
+			var questionSelection = $(".questionCheck");
+			for(var i=0; i< questionSelection.length; i++){
+				questionSelection[i].checked = checked;
+			}
 	};
 
 

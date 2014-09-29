@@ -271,7 +271,7 @@ function saveQuiz($data){
 
 function selectQuiz(){
 	$selector['table'] = 'quiz';
-	$selector['param']['id'] = 	getQuizId();
+	$selector['param']['id'] =		getQuizId();
 	$result= select($selector);
 
 	if(count($result)>0)
@@ -286,12 +286,12 @@ function updateEncryption($quiz){
 		DBupdate("update " . TABLE_PREFIX_ . "quiz set encrypted = 1 where id = $quizId");
 		DBupdate("update " . TABLE_PREFIX_ . "question set " .
 					" description = aes_encrypt(description, " . SALT . "), " .
-					" answer 	  = aes_encrypt(answer, " . SALT . "), " .
+					" answer		  = aes_encrypt(answer, " . SALT . "), " .
 					" answerExtra = aes_encrypt(answerExtra, " . SALT . ") " .
 					" where quizId = $quizId");
 		DBupdate("update " . TABLE_PREFIX_ . "question_history set " .
 					" description = aes_encrypt(description, " . SALT . "), " .
-					" answer 	  = aes_encrypt(answer, " . SALT . "), " .
+					" answer		  = aes_encrypt(answer, " . SALT . "), " .
 					" answerExtra = aes_encrypt(answerExtra, " . SALT . ") " .
 					" where quizId = $quizId");
 	}
