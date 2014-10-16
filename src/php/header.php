@@ -316,14 +316,14 @@ debug($options);
 
 	$difficultyEditable = "";
 	if($editable && $showDifficulty){
-		$difficultyEditable="<span class=\"editableSelect $difficulty \"  id=\"difficulty_" . $question["questionId"] ."\">". $question['difficulty'] ."</span>";
+		$difficultyEditable="<span><span class=\"editableSelect $difficulty \"  id=\"difficulty_" . $question["questionId"] ."\" data-table='question'>". $question['difficulty'] ."</span></span>";
 		$difficulty="";
 	} else {
 		$difficultyEditable="<span class=\"$difficulty \"  id=\"difficulty_" . $question["questionId"] ."\">&nbsp;</span>";
 	}
 
 
-	return "$difficultyEditable<span class=\"$editableStyle $tooltipClass answer $hiddenAnswerClass \" id=\"answer_" . $question["questionId"] ."\"  $hiddenAnswerToolTip>" . $answer .'</span> ' . $detailLink  . $taskIndicator . '' . $description;
+	return "$difficultyEditable<span><span class=\"$editableStyle $tooltipClass answer $hiddenAnswerClass \" id=\"answer_" . $question["questionId"] ."\"  $hiddenAnswerToolTip data-table='question'>" . $answer .'</span> </span>' . $detailLink  . $taskIndicator . '' . $description;
 	/*
 	}
 	else{

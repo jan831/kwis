@@ -29,27 +29,6 @@ function debug(){
 function updateDifficulties(){
 	var cells = $("#questionMatrix").find(".matrixCell");
 
-	var difficulties = {};
-	cells.each(function(){
-		children = $(this).find(".answer");
-		var roundId =  this.id.split('_')[1];
-		for(var i=0; i<children.length; i++){
-			var classList = children[i].className.split(/\s+/);
-			for (var c = 0; c < classList.length; c++) {
-				var diff = classList[c];
-				if (diff != 'difficulty' && diff.substring(0, 10) == 'difficulty') {
-				    if(difficulties[roundId] == null)
-		                        difficulties[roundId] = {};
-				    if(difficulties[roundId][diff] == null)
-				        difficulties[roundId][diff] = 0;
-
-				    difficulties[roundId][diff]++;
-				}
-			}
-
-		}
-	});
-	debug("difficulties", difficulties);
 	$("#questionMatrix").find(".difficultyCell").each(function(){
 		var roundId =  this.id.split('_')[1];
 		var diffs = $(this).find("span");
@@ -59,11 +38,8 @@ function updateDifficulties(){
 			for (var c = 0; c < classList.length; c++) {
 				var diff = classList[c];
 				if (diff != 'difficulty' && diff.substring(0, 10) == 'difficulty') {
-				    if(difficulties[roundId] != null && difficulties[roundId][diff] != null){
-				        text = difficulties[roundId][diff];
-				    }
-				    else{
-				    }
+					var elements = $(".round_"+roundId).find("." + diff);
+					text = elements.length;
 				}
 			}
 		    $(diffs[i]).html(text + "&nbsp;");
@@ -99,7 +75,6 @@ function myhandler_dropped(node, cellNode){
 function updateLayout(){
 	$("tr").each(function(index, row){
 		var isHidden = $.cookie("matrixHide_" + row.id);
-		debug("updateLayout","matrixHide_" + row.id, row, (isHidden == true), (isHidden == "true"));
 
 		if(isHidden == "true" ){
 			$(row).hide();
@@ -108,7 +83,6 @@ function updateLayout(){
 
 	$(".roundHeader").each(function(index, col){
 		var isHidden = $.cookie("matrixHide_" + col.id);
-		debug("updateLayout", isHidden);
 		if(isHidden == "true"){
 			$('#questionMatrix td:nth-child(' + (col.cellIndex +1) + ')').hide();
 		}
@@ -220,6 +194,93 @@ function updateSequence(listSelector, elementSelector, tableName){
 	});
 }
 
+function closeEditable(evt){
+	console.log("close", evt.currentTarget);
+	
+	$(evt.currentTarget).parent().hide();
+	$("#" + $(evt.currentTarget).parent().attr("id").replace("editable_", "")).show();
+	return false;
+}
+
+function saveEditable(evt){
+	var origElement = $("#" + $(evt.currentTarget).parent().attr("id").replace( "editable_", ""))[0];
+	
+	var value = $(evt.currentTarget).parent().find(".input").val();
+	var table = $(origElement).data("table");
+	var id = origElement.id.split('_')[1];
+	var field =  origElement.id.split('_')[0];
+	var updateInfo = { "detail[table]": table, "detail[id]": id };
+	updateInfo["detail[param][" + field +"]"] = value;
+	
+	if($(origElement).html() != value){
+		debug(updateInfo);
+		$.post("save_data.php", updateInfo , function(data){
+			console.log(origElement, "difficulty"+$(origElement).html());
+			if($(origElement).hasClass("difficulty")){
+				$(origElement).removeClass("difficulty"+$(origElement).html());
+				$(origElement).addClass("difficulty"+value);
+				
+			}
+			$(origElement).html(value);
+			
+			closeEditable(evt);
+		});
+	} else {
+		closeEditable(evt);
+	}
+	return false;
+}
+
+var editableButtonsHtml = '<a href="#" class="saveBtn" title="Bewaren"><span class="glyphicon glyphicon-ok" ></span></a><a href="#" class="cancelBtn" title="Annuleren"><span class="glyphicon glyphicon-remove" ></span></a>';
+
+function clickEditableTextArea(){
+	$(".editableTextArea").on('click', function(){
+		var id = "editable_" + this.id;
+		if( $("#"+id).length == 0){
+			$(this).parent().append("<div id='" + id + "' class='editable'><textarea class='input' rows='4' >" +  $(this).html() + "</textarea>" + editableButtonsHtml + "</div>");
+			$(this).parent().find(".saveBtn").on("click", saveEditable);
+			$(this).parent().find(".cancelBtn").on("click", closeEditable);
+		} else {
+			$("#"+id).show();
+		}
+		$(this).hide();
+	});
+	$(".editableText").on('click', function(){
+		var id = "editable_" + this.id;
+		if( $("#"+id).length == 0){
+			console.log($(this).html().length);
+			$(this).parent().append("<span id='" + id + "' class='editable'><input class='input' type='text' value='" +  $(this).html() + "' size='20'/>" + editableButtonsHtml + "</span>");
+			$(this).parent().find(".saveBtn").on("click", saveEditable);
+			$(this).parent().find(".cancelBtn").on("click", closeEditable);
+		} else {
+			$("#"+id).show();
+		}
+		$(this).hide();
+	});
+	$(".editableSelect").on('click', function(){
+		var id = "editable_" + this.id;
+		if( $("#"+id).length == 0){
+			var selected = $(this).html();
+			
+			var html = "<span id='" + id + "' class='editable'><select class='input' type='text' value='" +  $(this).html() + "'>";
+			$.each(editableSelectOptions, function(key, value){
+				var sel = selected == key?"selected":"";
+				console.log(selected, key, sel);
+				html += "<option value='"+key + "' " + sel + ">"+value+ "</option>";
+			});
+					
+			html += "</select>" + editableButtonsHtml + "</span>"
+					
+			$(this).parent().append(html);
+			$(this).parent().find(".saveBtn").on("click", saveEditable);
+			$(this).parent().find(".cancelBtn").on("click", closeEditable);
+		} else {
+			$("#"+id).show();
+		}
+		$(this).hide();
+	});
+}
+
 	
 $(document).ready(function(){
 	$('.hasToolTip').tooltip({
@@ -233,7 +294,6 @@ $(document).ready(function(){
 		html: true,
 		placement: 'auto',
 		title : function() { 
-			console.log(this.id);
 			if( $("#tooltip_" + this.id).length == 1)
 				return $("#tooltip_" + this.id).html(); 
 			else{
@@ -260,4 +320,6 @@ $(document).ready(function(){
 	if(isVisible != null && (isVisible == "false" || isVisible == false)){
 		$("#selectorTable").hide();
 	}
+	
+	clickEditableTextArea();
 });

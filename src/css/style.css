@@ -29,6 +29,17 @@ textarea{
 	float: right;
 }
 
+.editable {
+	background: #F9F9F9;
+	border: 1px grey solid;
+	padding: 5px;
+}
+
+.difficultyCell .list-group-item {
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
 ins {color:green;background:#dfd;text-decoration:none}
 del {color:red;background:#fdd;text-decoration:none}
 
@@ -38,6 +49,10 @@ del {color:red;background:#fdd;text-decoration:none}
 	border-left: solid 7px;
 	overflow: hidden;
 	color: white;
+}
+
+.list-group-item .difficulty{
+	color: black;
 }
 
 .difficulty1{
@@ -74,3 +89,11 @@ del {color:red;background:#fdd;text-decoration:none}
 .slideImages img {
 	height: 100px;
 }
+
+
+*[draggable=true] {
+  -moz-user-select:none;
+  -khtml-user-drag: element;
+  cursor: move;
+}
+

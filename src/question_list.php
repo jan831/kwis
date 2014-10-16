@@ -64,18 +64,18 @@ include ("php/question_selector.php");
 					if($selector["order"] == "round_thema"  && $question["themaSequence"] > 0){
 						echo "<span>" . $question["thema"] . " </span>  - ";
 					}
-					echo formatAuditInfo($question) ."<div class=\"editableTextArea description\" id=\"description_$id\">" .$question['description'] ."</div></div>";
+					echo formatAuditInfo($question) ."<div class=\"editableTextArea description\" id=\"description_$id\" data-table='question'>" .$question['description'] ."</div></div>";
 					echo formatAnswer($question, array("editable"=> true));
-					echo "<div><div class=\"editableTextArea answerExtra\" id=\"answerExtra_$id\">". $question['answerExtra'] ."</div></div>";
+					echo "<div><div class=\"editableTextArea answerExtra\" id=\"answerExtra_$id\" data-table='question' data-table='question'>". $question['answerExtra'] ."</div></div>";
 
 					if($question['childQuestions'] > 0){
 					echo '<ul  class="childQuestions">';
 					foreach($question["children"]  as $subQuestion){
 						$id  = $subQuestion["questionId"];
 						echo '<li ><div  id="question' . $id . '" class="questionGroup">';
-						echo "<div>".formatAuditInfo($subQuestion) ."<div class=\"editableTextArea description\" id=\"description_$id\">" .$subQuestion['description'] ."</div></div>";
+						echo "<div>".formatAuditInfo($subQuestion) ."<div class=\"editableTextArea description\" id=\"description_$id\" data-table='question'>" .$subQuestion['description'] ."</div></div>";
 						echo formatAnswer($subQuestion, array("editable"=> true));
-						echo "<div><div class=\"editableTextArea answerExtra\" id=\"answerExtra_$id\">". $subQuestion['answerExtra'] ."</div></div>";
+						echo "<div><div class=\"editableTextArea answerExtra\" id=\"answerExtra_$id\" data-table='question'>". $subQuestion['answerExtra'] ."</div></div>";
 						echo '</div></li>';
 					}
 					echo'</ul>';
@@ -133,6 +133,16 @@ include ("php/question_selector.php");
 //			});
 
 
+			var editableSelectOptions = {
+					<?php
+							  for($i = 0; $i < count($difficulties)-1; $i++) {
+									$diff = $difficulties[$i];
+									echo $diff["id"] . ": '". $diff["description"] . "',";
+								}
+								$diff = $difficulties[count($difficulties)-1];
+									echo $diff["id"] . ": '". $diff["description"] ."'";
+								?>
+							};
 			</script>
 			<?php
 		}

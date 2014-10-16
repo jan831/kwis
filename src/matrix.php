@@ -20,7 +20,7 @@
 include_once("php/header.php");
 printHeader("vragen overzicht");
 
-$print = coalesce($_GET["print"], $_SESSION["print"], 0);
+$print = coalesce(@$_GET["print"], @$_SESSION["print"], 0);
 $_SESSION["print"] = $print;
 ?>
 <body>
@@ -39,10 +39,11 @@ $roundNull = selectRoundNull();
 $difficulties = selectDifficulty();
 $questions = selectQuestionsForMatrix($themas);
 
+debug("roundNull", $roundNull);
 debug("rounds", $rounds);
 debug("themas", $themas);
 debug("questions", $questions);
-echo '<div id="drag"><table width="100%"  class="matrix" id="questionMatrix"	style="min-width: 100%">';
+echo '<div id="drag"><table width="100%"  class="table table-condensed table-bordered" id="questionMatrix"	style="min-width: 100%">';
 
 $cols = 0;
 echo "<thead><tr id=\"headerRow\"><td class=\"forbid matrixCell\"  id=\"col" . ($cols++) . "\">\n";
@@ -58,7 +59,7 @@ $drag = $print?"":"drag";
 
 $rows = 0;
 foreach($questions as $sequence => $tmp){
-	$thema = $themas[$sequence];
+	$thema = @$themas[$sequence];
 	debug("thema ", $thema);
 	echo "<tr id=\"row". $rows++ ."\">";
 	echo '<td class="forbid matrixCell clickeable rowHeader" title="klik om rij te verbergen">' .$sequence . ". ". $thema['description'] . "</td>\n";
@@ -75,10 +76,11 @@ foreach($questions as $sequence => $tmp){
 				$extraClass ="dropable";
 			}
 		}
+		$extraClass .= " round_" . $round["roundId"];
 		echo '<td class="' . $extraClass. ' matrixCell" id="' . $id .'">';
 
 		debug("roundId roundDescr, sequence " . $round["roundId"] .' '. $round["description"] . " " . $sequence);
-		if(is_array($questions[$sequence][$round["roundId"]])){
+		if(is_array(@$questions[$sequence][$round["roundId"]])){
 			foreach($questions[$sequence][$round["roundId"]]  as $question) {
 				$qId = 'draghandle_' . $question["questionId"] . '_'. $question["themaId"];
 				if($question["isSpecial"]){
@@ -123,10 +125,10 @@ echo "<tfoot><tr id=\"difficultyFooter\"><td class=\"forbid matrixCell clickeabl
 foreach($rounds as $round) {
 	$id = "difficulty_" . $round["roundId"] ;
 	echo '<td class="forbid difficultyCell"  id="' . $id .'">';
-	echo '<ul class="difficultyList">';
+	echo '<ul class="list-group">';
 	foreach($difficulties as $diff){
-		if($diff[id] >0){
-			echo '<li><span class="difficulty difficulty' . $diff["id"] . '">&nbsp;</span>' .  $diff["description"] . '</li>';
+		if($diff["id"] >0){
+			echo '<li class="list-group-item"><span class="difficulty difficulty' . $diff["id"] . '">&nbsp;</span>' .  $diff["description"] . '</li>';
 		}
 	}
 	echo "</ul>";
@@ -136,12 +138,12 @@ echo "</tr></tfoot>";
 
 echo '</table><br/><br />';
 
-echo "<table  class=\"matrix\"><thead><tr><td class=\"forbid matrixHeader\" colspan=\"2\">niet toegewezen vragen</td></tr></thead>\n";
+echo "<table  class=\"table table-bordered medium-width\"><thead><tr><td class=\"forbid matrixHeader\" colspan=\"2\">niet toegewezen vragen</td></tr></thead>\n";
 echo "<tr><td class=\"forbid matrixCell\"> rondenummer verwijderen, bestaand thema behouden</td>";
-	echo '<td class="dropable matrixCell" id="cell_' . $roundNull["id"] . '"></td></tr>';
+echo '<td class="dropable matrixCell" id="cell_' . $roundNull["id"] . '"></td></tr>';
 
 foreach($questionsWithoutRound as $title => $questionGroup){
-	$id = "cell_" . $roundNull["id"] . '_' . $questionGroup["id"];
+	$id = "cell_" . $roundNull["id"] . '_0';
 	echo '<tr><td class="forbid matrixCell">' . $title  . '</td>';
 	echo '<td class="dropable matrixCell" id="' . $id .'">';
 
@@ -165,7 +167,8 @@ echo '</table></div>';
 
 
 ?>
-
+<script src="lib/jquery-ui-1.11.1.custom/jquery-ui.min.js" ></script>
+<script src="js/drag.js"></script>
 <script type="text/javascript">
 
 var hover_color = '#E8E8E8';
