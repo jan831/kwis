@@ -115,35 +115,34 @@ if($questionId != null)
 			<li class="<?php echo isCurPage('question_list_print.php');?>">
 				<a href="question_list_print.php" id="menu_print" >print lijst</a>
 			</li>
-		<?php } ?>
+			<li class="divider"></li>
+			<li class="<?php echo isCurPage('round_list.php');?>">
+				<a href="round_list.php" >rondes</a>
+			</li>
+			<li class="<?php echo isCurPage('thema_list.php');?>">
+				<a href="thema_list.php">thema's</a>
+			</li>
+			<li class="<?php echo isCurPage('file_list.php');?>">
+				<a href="file_list.php">files</a>
+			</li>
 		</ul>
 		<ul class="nav navbar-nav navbar-right">
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Extra <span class="caret"></span></a>
 				<ul class="dropdown-menu" role="menu">
-					<li class="<?php echo isCurPage('round_list.php');?>">
-						<a href="round_list.php" >rondes</a>
-					</li>
-					<li class="<?php echo isCurPage('thema_list.php');?>">
-						<a href="thema_list.php">thema's</a>
-					</li>
-					<li class="<?php echo isCurPage('file_list.php');?>">
-						<a href="file_list.php">files</a>
+					<li class="<?php echo isCurPage('question_list_delete.php');?>">
+						<a href="question_list_delete.php">vragen verwijderen</a>
 					</li>
 					<li class="<?php echo isCurPage('slide_list.php');?>">
 						<a href="slide_list.php">slides</a>
-					</li>
-					<li class="<?php echo isCurPage('question_list_delete.php');?>">
-						<a href="question_list_delete.php">vragen verwijderen</a>
 					</li>
 					<li class="<?php echo isCurPage('question_list_analysis.php');  echo isCurPage('question_list_analysis.php?input=1');?>">
 						<a href="question_list_analysis.php">analyze</a>
 					</li>
 				</ul>
 			</li>
-			<?php if(getQuizId() != -1){?>
-				<li><a href="index.php?logoff">uitloggen</a></li>
-			<?php } ?>
+			<li><a href="index.php?logoff">uitloggen</a></li>
+		<?php } ?>
 			
 		</ul>
 	  <!-- 

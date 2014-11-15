@@ -2,11 +2,11 @@ $(document).ready(function(){
 
 	$(".dropable" ).droppable({ accept: ".drag",
 		drop: function( event, ui ) {
-			console.log(event, ui);
+			console.log("drop", event, ui);
 			$(event.target).append(ui.draggable);
 			$(ui.draggable).css({
 		        top: "0px",
-		        left: "0px"
+		        left: "0px",
 		    });
 			
 			var answerNode = $(ui.draggable).find(".answer")[0];
@@ -37,19 +37,20 @@ $(document).ready(function(){
 	});
 	$(".drag").draggable({
 		// snap: "td",
+		snap: true,
+		snapMode: "inner",
 		start: function(){
 			$('.hasToolTip').tooltip('disable');
 			$(".hasHtmlToolTip").tooltip('disable');
 		},
-		stop: function(){
+		stop: function(event, ui){
 			console.log("stop", arguments);
 			$('.hasToolTip').tooltip('enable');
 			$(".hasHtmlToolTip").tooltip('enable');
+			$(ui.helper).css({
+		        top: "0px",
+		        left: "0px",
+		    });
 		},
-		revert: function(){
-			console.log("revert", arguments);
-			return false;
-		},
-		
 	});
 });

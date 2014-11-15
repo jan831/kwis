@@ -165,33 +165,66 @@ function getInlineEditData(element, new_value, tableName){
 
 function installUpdateSequence(listSelector, elementSelector, tableName){
 	
+	$(listSelector).find(".glyphicon-arrow-up").click(function(event){
+		var li = $(event.currentTarget).parent("li"),
+			other = $(li).prev();
+		var updated = updateSequence(li, other, listSelector, tableName);
+		
+		if(updated){
+			other.before(li);
+		}
+	});
 	
-//	$(listSelector).sortable({ 
-//		update : function () {
-//			updateSequence(listSelector, elementSelector, tableName);
-//	  }
-//	}); 
-//	$(listSelector).disableSelection();
+	$(listSelector).find(".glyphicon-arrow-down").click(function(event){
+		var li = $(event.currentTarget).parent("li"),
+			other = $(li).next();
+		var updated = updateSequence(li, other, listSelector, tableName);
+		
+		if(updated){
+			li.before(other);
+		}
+	});
+	
+	$(listSelector).click(function(event){
+		if( !$(event.target).hasClass("glyphicon-arrow-up") && ! $(event.target).hasClass("glyphicon-arrow-down")){
+			$(listSelector).find(".active").removeClass("active");
+		}
+	});
 };
 	
-function updateSequence(listSelector, elementSelector, tableName){
-	var order = $(listSelector).find(elementSelector);	
-		  
+function updateSequence(li, other, listSelector, tableName){
+	var sequence = li.data("sequence"),
+		otherSequence = other.data("sequence");
+	if(otherSequence == undefined || otherSequence  <=0){
+		return false;
+	}
+	
 	var updateInfo = { multiple: true, data: null};
 	updateInfo.data = Array();
 
-	for(var i=0; i< order.length; i++){
-		var elementId = order[i].id.split('_')[1];
-		updateInfo["data[" +i +"][table]"] = tableName;
-		updateInfo["data[" +i +"][id]"] = elementId;
-		updateInfo["data[" +i +"][param][sequence]"] = i ;
-	}
+	var elementId = li.attr("id").split('_')[1];
+	updateInfo["data[0][table]"] = tableName;
+	updateInfo["data[0][id]"] = elementId;
+	updateInfo["data[0][param][sequence]"] = otherSequence;
+	
+	elementId = other.attr("id").split('_')[1];
+	updateInfo["data[1][table]"] = tableName;
+	updateInfo["data[1][id]"] = elementId;
+	updateInfo["data[1][param][sequence]"] = sequence;
+	
+	
+	li.data("sequence", otherSequence);
+	other.data("sequence", sequence);
+	
+	$(listSelector).find(".active").removeClass("active");
+	li.addClass("active");
 
-	debug(order, updateInfo);
+	debug( updateInfo);
 	$.post("save_data.php", updateInfo , function(data){
 		showStatus("volgorde aangepast");
 		debug("Data Loaded: " + data);
 	});
+	return true;
 }
 
 function closeEditable(evt){
@@ -210,7 +243,7 @@ function saveEditable(evt){
 	var id = origElement.id.split('_')[1];
 	var field =  origElement.id.split('_')[0];
 	var updateInfo = { "detail[table]": table, "detail[id]": id };
-	updateInfo["detail[param][" + field +"]"] = value;
+	updateInfo["detail[param][" + field +"]"] = value.trim();
 	
 	if($(origElement).html() != value){
 		debug(updateInfo);
@@ -233,7 +266,7 @@ function saveEditable(evt){
 
 var editableButtonsHtml = '<a href="#" class="saveBtn" title="Bewaren"><span class="glyphicon glyphicon-ok" ></span></a><a href="#" class="cancelBtn" title="Annuleren"><span class="glyphicon glyphicon-remove" ></span></a>';
 
-function clickEditableTextArea(){
+function clickEditableFields(){
 	$(".editableTextArea").on('click', function(){
 		var id = "editable_" + this.id;
 		if( $("#"+id).length == 0){
@@ -249,7 +282,8 @@ function clickEditableTextArea(){
 		var id = "editable_" + this.id;
 		if( $("#"+id).length == 0){
 			console.log($(this).html().length);
-			$(this).parent().append("<span id='" + id + "' class='editable'><input class='input' type='text' value='" +  $(this).html() + "' size='20'/>" + editableButtonsHtml + "</span>");
+			var size = Math.min($(this).html().length + 5, 20);
+			$(this).parent().append("<span id='" + id + "' class='editable'><input class='input' type='text' value='" +  $(this).html() + "' size='" + size +"'/>" + editableButtonsHtml + "</span>");
 			$(this).parent().find(".saveBtn").on("click", saveEditable);
 			$(this).parent().find(".cancelBtn").on("click", closeEditable);
 		} else {
@@ -321,5 +355,5 @@ $(document).ready(function(){
 		$("#selectorTable").hide();
 	}
 	
-	clickEditableTextArea();
+	clickEditableFields();
 });

@@ -32,7 +32,7 @@ debug("rounds", $rounds);
 echo "<body >";
 printMenu(true); 
 ?>
-<div class="container-fluid" ">
+<div class="container-fluid" >
 <div class="panel panel-default" >
 	<div class="panel-heading"><h3 class="panel-title">Rondes</h3></div>
 	<div class="panel-body medium-width">
@@ -40,7 +40,6 @@ printMenu(true);
 		if(count($rounds) == 0){  
 			echo "<strong>maak eerst een ronde '-' of 'geen ronde' aan</strong>";
 		}
-		echo "</span>&nbsp";
 					echo '<ul id="rounds" class="list-group" start="0">';
 					$isfirst = true;
 					foreach($rounds as $round){
@@ -52,10 +51,10 @@ printMenu(true);
 							$isfirst=false;
 						}
 						else{
-							echo '<li id="round_' . $round["id"] .'" class="list-group-item">';
+							echo '<li id="round_' . $round["id"] .'" class="list-group-item" data-sequence="' . $round["sequence"] .'" >';
 							echo '<span class="glyphicon glyphicon-trash" id="delete_' . $round["id"] .'"></span>';
-							echo '<span class="glyphicon glyphicon-arrow-up"></span><span class="glyphicon glyphicon-arrow-down">&nbsp;&nbsp;&nbsp;';
-							echo '<span class="editableText" id="description_' . $round["id"] .'" >' . $round["description"]. "</span>\n";
+							echo '<span class="glyphicon glyphicon-arrow-up"></span><span class="glyphicon glyphicon-arrow-down"></span>&nbsp;&nbsp;&nbsp;';
+							echo '<span><span class="editableText" id="description_' . $round["id"] .'" data-table="round" >' . $round["description"]. "</span></Span>\n";
 							echo '<input type="checkbox" title="speciale ronde?" id="isSpecial_' . $round["id"] .'" ' . ($round["isSpecial"]?' checked="yes"':"") . ' onchange="changeIsSpecial(this)"/>';
 							echo '<span class="glyphicon glyphicon-delete"></span>';
 							echo "</li>\n";

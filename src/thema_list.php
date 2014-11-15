@@ -32,7 +32,7 @@ echo "<body >";
 
 printMenu(true);
 ?>
-<div class="container-fluid" ">
+<div class="container-fluid" >
 <div class="panel panel-default" >
 	<div class="panel-heading"><h3 class="panel-title">Thema's</h3></div>
 	<div class="panel-body medium-width">
@@ -40,7 +40,6 @@ printMenu(true);
 		if(count($themas) == 0){  
 			echo "<strong>maak eerst een thema '-' of 'geen thema' aan</strong>";
 		}
-		echo "</span>&nbsp";
 		echo '<ol id="themas" class="list-group" start="0">';
 		$isfirst = true;
 		foreach($themas as $thema){
@@ -52,10 +51,10 @@ printMenu(true);
 				$isfirst=false;
 			}
 			else{
-				echo '<li id="thema_' . $thema["id"] .'" class="list-group-item">';
+				echo '<li id="thema_' . $thema["id"] .'" class="list-group-item" data-sequence=' . $thema["sequence"] . '>';
 				echo '<span class="glyphicon glyphicon-trash" id="delete_' . $thema["id"] .'"></span>';
-				echo '<span class="glyphicon glyphicon-arrow-up"></span><span class="glyphicon glyphicon-arrow-down">&nbsp;&nbsp;&nbsp;';
-				echo '<span class="editableText" id="description_' . $thema["id"] .'" >' . $thema["description"]. "</span>";
+				echo '<span class="glyphicon glyphicon-arrow-up"></span><span class="glyphicon glyphicon-arrow-down"></span>&nbsp;&nbsp;&nbsp;';
+				echo '<span><span class="editableText" id="description_' . $thema["id"] .'" data-table="thema">' . $thema["description"]. "</span></span>";
 				echo "</li>";
 			}
 		
@@ -122,7 +121,7 @@ var saveFunction = function(auto) {
 			showStatus("gegevens bewaard om " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() );
 
 			$("#themas").append(
-							'<li id="thema_' + id +'" class="list-group-item">' +
+							'<li id="thema_' + id +'" class="list-group-item" data-sequence=' + nextSeq +'>' +
 							'<span class="glyphicon glyphicon-arrow-up"></span><span class="glyphicon glyphicon-arrow-down">&nbsp;&nbsp;&nbsp;' +
 							'<span class="editableText" id="description_' + id +'" >' + description + "</span></li>");
 

@@ -182,7 +182,7 @@ debug($formBuilder);
 </div>
 <div class="panel panel-default" id="notes">
 	<div class="panel-heading"><h3 class="panel-title">Notities</h3></div>
-	<div class="panel-body medium-width">
+	<div class="panel-body">
 		<?php
 		echo '<table class="table" id="tasks">';
 		if($question['taskCount'] > 0){
@@ -194,13 +194,18 @@ debug($formBuilder);
 					$deleteButton = '<button id="deleteTask_' . $task['id'] . '" class="deleteTaskButton">verwijderen</button>';
 					$rowId= "row_" . $task['id'];
 					echo "<tr id=\"$rowId\">";
-					echo "<td>" . formatAuditInfo($task) . "</td>";
-					$taskDescr = linkify($task['description']);
+					echo "<td  class='col-md-2'>" . formatAuditInfo($task) . "</td>";
+					if(isNotBlank($task['description'])){
+						$taskDescr = linkify($task['description']);
+					} else {
+						$taskDescr = "&nbsp;&nbsp;&nbsp;&nbsp;";
+					}
 					$editableClass = "";
 					if(stripos($taskDescr, "a href") == false){
 						$editableClass= "editableTextArea"; 
 					}
-					echo "<td>" . $task['taskCategory'] . "</td><td><div class=\"$editableClass\" id=\"task_" .$task["id"] ."\">" . $taskDescr . "</div></td><td>&nbsp;$readyButton</td><td>$deleteButton</td></tr>";
+					echo "<td class='col-md-2'>" . $task['taskCategory'] . "</td><td  class='col-md-5'><div class=\"$editableClass\" id=\"description_" .$task["id"] ."\" data-table='task'>" . $taskDescr . "</div></td>";
+					echo "<td class='col-md-2'>&nbsp;$readyButton</td><td class='col-md-1'>$deleteButton</td></tr>";
 			}
 		}
 		echo "</table>";
@@ -517,12 +522,6 @@ var saveTaskFunction = function() {
 	return false;
 };
 
-var updateTaskDescription  = function(self, new_value){
-	var taskId = self.id.split('_')[1];
-	var updateInfo = { "detail[table]": 'task', "detail[id]": taskId };
-	updateInfo["detail[param][description]"] = new_value;
-	return updateInfo;
-};
 
 function checkImage(form){
 	debug(form);

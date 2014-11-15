@@ -173,9 +173,6 @@ echo '</table></div>';
 
 var hover_color = '#E8E8E8';
 // used for myhandlers demo to display events
-function message(text){
-//	debug( text);
-}
 
 
 $(document).ready(function(){
