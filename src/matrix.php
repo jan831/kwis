@@ -183,19 +183,19 @@ $(document).ready(function(){
 	$.cookies.setOptions(newOptions);
 */
 
-		updateDifficulties();
+	updateDifficulties();
 	updateLayout();
 
 	$( "#toggleDifficulty").click(function(){
 		$("#difficultyFooter").hide();
 		$.cookie("matrixHide_difficultyFooter", true);
 	});
-		$( "#extraSequenceTD").click(function(){
+	$( "#extraSequenceTD").click(function(){
 		$("#extraSequenceTR").hide();
 		$.cookie("matrixHide_extraSequenceTR", true);
 	});
-		$( ".rowHeader").click(function(){
-	debug("matrixHide_"+$(this.parentNode)[0].id);
+	$( ".rowHeader").click(function(){
+		debug("matrixHide_"+$(this.parentNode)[0].id);
 		$(this.parentNode).hide();
 		$.cookie("matrixHide_"+$(this.parentNode)[0].id, true);
 	});

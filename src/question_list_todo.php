@@ -141,6 +141,7 @@ $results = selectQuestionsForList($selector);
 
 		 $.post("save_data.php", updateInfo , function(data){
 			 showStatus("toegevoegd voor " + numSelected + " vragen");
+			 $("#newTaskForm")[0].reset();
 		});
 
 		return false;

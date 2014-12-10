@@ -21,17 +21,20 @@
 
 include_once("php/header.php");
 printHeader("vraag detail");
+$questionId = $_GET["id"]
+?>
+<body >
+<?php printMenu(false, $questionId);
 
 global $debug;
 
 $debug = false;
-$question = selectQuestionById($_GET["id"]);
+$question = selectQuestionById($questionId);
 if(isset($_GET['parentId'])){
 	$question["parentId"] = $_GET['parentId'];
 }
 
 $prevNext = getPrevAndNextQuestionId($question);
-
 
 $themas = selectThemas();
 $difficulty = selectDifficulty();
@@ -42,8 +45,6 @@ $history = selectQuestionHistory($question["id"]);
 
 debug($formBuilder);
 ?>
-<body >
-<?php printMenu(false, $question["id"]); ?>
 <div class="container-fluid" id="question_detail">
 <div class="panel panel-default" id="question">
 	<div class="panel-body">
@@ -92,7 +93,7 @@ debug($formBuilder);
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-2 col-sm-3">
+				<div class="col-md-1 col-sm-3">
 					<?php $formBuilder->getLabel("param.roundId", "Ronde"); ?>
 				</div><div class="col-md-2 col-sm-3">
 					<?php $formBuilder->getSelect("param.roundId",$rounds); ?>
@@ -102,13 +103,13 @@ debug($formBuilder);
 					<?php $formBuilder->getSelect("param.themaId", $themas); ?>
 				</div><div class="col-md-2 col-sm-3">
 					<?php $formBuilder->getLabel("param.difficulty", "moeilijkheidsgraad"); ?>
-				</div><div class="col-md-2 col-sm-3">
+				</div><div class="col-md-3 col-sm-3">
 					<?php $formBuilder->getSelect("param.difficulty",$difficulty); ?>
 				</div>
 			</div>
 			<?php if($question["isSpecial"]){ ?>
 				<div class="row">
-					<div class="col-md-2 col-sm-3">
+					<div class="col-md-1 col-sm-3">
 						<?php $formBuilder->getLabel("param.sequence", "volgorde"); ?>
 					</div><div class="col-md-2 col-sm-3">
 					<?php $formBuilder->getText("param.sequence", 1); ?>
@@ -116,33 +117,37 @@ debug($formBuilder);
 				</div>
 			<?php } ?>
 			<div class="row">
-				<div class="col-md-2">
+				<div class="col-md-1">
 					<?php $formBuilder->getLabel("param.description", "vraag"); ?>
-				</div><div class="col-md-10">
+				</div><div class="col-md-11">
 					<?php $formBuilder->getTextArea("param.description", 10); ?>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-2">
+				<div class="col-md-1">
 					<?php $formBuilder->getLabel("param.answer", "antwoord"); ?>
-				</div><div class="col-md-10">
+				</div><div class="col-md-11">
 				<?php $formBuilder->getTextArea("param.answer", 1); ?>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-2">
+				<div class="col-md-1">
 					<?php $formBuilder->getLabel("param.answerExtra", "extra uitleg"); ?>
-				</div><div class="col-md-10">
+				</div><div class="col-md-11">
 					<?php $formBuilder->getTextArea("param.answerExtra", 2); ?>
 				</div>
 			</div>
 			<div class="row">
 				<?php if(isset($question["answer"]) && isNotBlank($question["answer"])){ ?>
-					<div class="col-md-6 text-center">
+					<div class="col-md-2"> &nbsp;</div>
+					<div class="col-md-4">
 						<?php
-						echo '<a target="_new" href="http://nl.wikipedia.org/wiki/' . str_replace(' ', '_', $question['answer']) . '">Wikipedia artikel</a> &nbsp;&nbsp;';
-						echo '<a target="_new" href="http://nl.wikipedia.org/wiki/Speciaal:Zoeken/' . $question['answer'] . '">Wikipedia zoeken</a>&nbsp;&nbsp;';
-						echo '<a target="_new" href="http://www.google.be/search?q=' . str_replace(' ', '+', $question['answer']) . '">Google zoeken</a> &nbsp;&nbsp;';
+							echo '<a target="_new" href="http://nl.wikipedia.org/wiki/' . str_replace(' ', '_', $question['answer']) . '">Wikipedia artikel</a> - ';
+							echo '<a target="_new" href="http://nl.wikipedia.org/wiki/Speciaal:Zoeken/' . $question['answer'] . '">zoeken</a> <br>';
+							echo '<a target="_new" href="http://www.google.be/search?q=' . str_replace(' ', '+', $question['answer']) . '">Google zoeken</a> - ';
+							echo '<a target="_new" href="http://www.google.be/search?tbm=isch&q=' . str_replace(' ', '+', $question['answer']) . '">afbeeldingen</a> <br>';
+							echo '<a target="_new" href="https://www.flickr.com/search/?q=' . str_replace(' ', '+', $question['answer']) . '">Flickr zoeken</a> &nbsp;&nbsp;';
+						
 						?>
 					</div>
 				<?php } ?>
@@ -160,6 +165,7 @@ debug($formBuilder);
 		</form>
 	</div>
 </div>
+<?php if( coalesce($question["parentId"], -1) <=0 ){ ?>
 <div class="panel panel-default" id="children">
 	<div class="panel-heading"><h3 class="panel-title">Deelvragen</h3></div>
 	<div class="panel-body">
@@ -170,16 +176,20 @@ debug($formBuilder);
 			if($question['childQuestions'] > 0){
 				echo "<h3>deelvragen:</h3>";
 	
-				echo '<ul id="childQuestions" class="childQuestions">';
+				echo '<ol id="childQuestions" class="childQuestions list-group">';
 				foreach($question["children"]  as $subQuestion){
 	
-					echo '<li id="childQuestion_' . $subQuestion["questionId"] .'" class="moveable">' . formatAnswerForDetail($subQuestion) . '</li>';
+					echo '<li id="childQuestion_' . $subQuestion["questionId"] .'" class="list-group-item" data-sequence=' . $subQuestion["sequence"] . ' >';
+ 					echo '<span class="glyphicon glyphicon-arrow-up clickeable"></span><span class="glyphicon glyphicon-arrow-down"></span>&nbsp;&nbsp;&nbsp;';
+				
+ 					echo formatAnswerForDetail($subQuestion) . '</li>';
 				}
-				echo'</ul>';
+				echo'</ol>';
 			}
 		?>
 	</div>
 </div>
+<?php } ?>
 <div class="panel panel-default" id="notes">
 	<div class="panel-heading"><h3 class="panel-title">Notities</h3></div>
 	<div class="panel-body">
@@ -278,7 +288,9 @@ debug($formBuilder);
 			$images = coalesce($question['images'], Array());
 			debug("images", $images);
 			foreach($images as $img){
-				echo '<tr><td id="image_' . $img["id"] .'">';
+				echo '<tr id="image_' . $img['id'] . '" data-sequence=' . $img["sequence"] . '>';
+				echo '<td style="min-width: 40px;"><span class="glyphicon glyphicon-arrow-up clickeable"></span><span class="glyphicon glyphicon-arrow-down"></span></td>';
+ 				echo '<td id="image_' . $img["id"] .'">';
 				echo formatImage($img, $question);
 				echo "</td><td>";
 				echo formatAuditInfo($img);
@@ -558,6 +570,8 @@ $(document).ready(function() {
 
 	window.onbeforeunload = checkFormDirty;   
 
+	installUpdateSequence('#images', "tr", "image", true);
+	installUpdateSequence('#childQuestions', "li", "question", true);
 	// installUpdateSequence('#childQuestions', ".answer", "question");
 	// installUpdateSequence('#images', "li", "image");
 

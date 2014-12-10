@@ -20,17 +20,18 @@
 include_once("php/header.php");
 debug($_POST);
 
- printHeader(); ?>
+printHeader(); ?>
 <body >
 <?php printMenu(true);
 ?>
 <div class="container-fluid">
 <?php 
 if(getQuizId() != -1){ 
-global $debug;
-	$questions = selectQuestionsForOverview();
-	$tasks = selectTasksForOverview();
-
+	global $debug;
+	
+	$nbrOfEntries = coalesce(@$_REQUEST["nbrOfEntries"], 15);
+	$questions = selectQuestionsForOverview($nbrOfEntries);
+	$tasks = selectTasksForOverview($nbrOfEntries);
 	echo "<h3>laatst gewijzigde vragen: </h3>";
 	echo"<ul id=\"list_0\" class=\"list_\">";
 	foreach($questions as $question){
@@ -48,7 +49,9 @@ global $debug;
 		echo '<li>'. formatAuditInfo($task). ': '. $task['taskCategory'] . " - " . $description .  formatAnswer( $task["question"], array("editable" => 0, "link"=> true, "hiddenQuestion" => true, "tasks" => true, "difficulty" => false) ) . '</li>';
 	}
 	echo"</ul>";
-} ?>
+	
+	$moreEntries = $nbrOfEntries*2;
+	echo "<a href='index.php?nbrOfEntries=" . $moreEntries . "'>toon meer</a>";} ?>
 </div>
 </body>
 </html>

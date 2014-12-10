@@ -94,7 +94,11 @@ function DbSelectStatement($query, $queryParams = null){
 		
 		$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	} catch (PDOException $e) {
-		error($e);
+		if(isset( $_SESSION["quizId"])){
+			error($e);
+		} else {
+			redirect("index.php");
+		}
 	}
 	/*	
 	}

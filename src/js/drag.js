@@ -1,6 +1,46 @@
-$(document).ready(function(){
+function getHoverColor(cell, obj){
+	var cellThemaId =  cell.id.split('_')[2];
+	var objThemaId =  obj.id.split('_')[2];
 
+	if(cellThemaId == -1){
+		cellThemaId = cell.id.split('_')[1];
+		objThemaId =  obj.id.split('_')[3];
+	}
+	
+	console.log(cell.id, obj.id, cellThemaId, objThemaId);
+	if(cellThemaId == null || objThemaId == cellThemaId)
+		return "dragGood";
+	else
+		return "dragBad";
+}
+
+$(document).ready(function(){
+	$(".drag").draggable({
+		// snap: "td",
+		start: function(){
+			$('.hasToolTip').tooltip('disable');
+			$(".hasHtmlToolTip").tooltip('disable');
+		},
+		stop: function(event, ui){
+			$('.hasToolTip').tooltip('enable');
+			$(".hasHtmlToolTip").tooltip('enable');
+			$(ui.helper).css({
+		        top: "0px",
+		        left: "0px",
+		    });
+			$(".dragGood").removeClass("dragGood");
+			$(".dragBad").removeClass( "dragBad");
+		},
+	});
 	$(".dropable" ).droppable({ accept: ".drag",
+		activeClass: "difficulty2",
+		hoverClass: "difficulty2",
+		over: function(event, ui){
+			$(event.target).addClass(getHoverColor(event.target, ui.helper[0]));
+		},
+		out: function(event, ui){
+			$(event.target).removeClass("dragGood").removeClass( "dragBad");
+		},
 		drop: function( event, ui ) {
 			console.log("drop", event, ui);
 			$(event.target).append(ui.draggable);
@@ -33,24 +73,6 @@ $(document).ready(function(){
 				 	updateDifficulties();
 			});
 			
-		},
-	});
-	$(".drag").draggable({
-		// snap: "td",
-		snap: true,
-		snapMode: "inner",
-		start: function(){
-			$('.hasToolTip').tooltip('disable');
-			$(".hasHtmlToolTip").tooltip('disable');
-		},
-		stop: function(event, ui){
-			console.log("stop", arguments);
-			$('.hasToolTip').tooltip('enable');
-			$(".hasHtmlToolTip").tooltip('enable');
-			$(ui.helper).css({
-		        top: "0px",
-		        left: "0px",
-		    });
 		},
 	});
 });

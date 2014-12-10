@@ -474,12 +474,14 @@ function selectQuestionsWithoutRoundForMatrix(){
 	return selectQuestions($selector, true, true, false);
 }
 
-function selectQuestionsForOverview(){
+function selectQuestionsForOverview($nbrOfEntries){
 	$selector['table'] = "question";
 	$selector['order'] = "modificationDate";
 
 	$questions = selectQuestions($selector, false, false, true);
-	return array_slice($questions, 0,15);
+	$result =  array_slice($questions, 0,$nbrOfEntries);
+	
+	return $result;
 }
 
 
@@ -559,11 +561,11 @@ function selectTasksForList($selector){
 	return $result;
 }
 
-function selectTasksForOverview(){
+function selectTasksForOverview($nbrOfEntries){
 	$selector["table"] = "task";
 	$selector["order"] = "modificationDate";
 	$tasks = selectTasksForList($selector);
-	return array_slice($tasks, 0, 10);
+	return array_slice($tasks, 0, $nbrOfEntries);
 }
 
 

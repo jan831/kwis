@@ -37,7 +37,7 @@
 	display: none;
 	visibility: hidden;
 }
-.description {
+.questionGroup {
 	page-break-inside: avoid;
 }
 .answer{

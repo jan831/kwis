@@ -163,12 +163,12 @@ function getInlineEditData(element, new_value, tableName){
 	return updateInfo;
 }
 
-function installUpdateSequence(listSelector, elementSelector, tableName){
+function installUpdateSequence(listSelector, elementSelector, tableName, allowSequenceZero){
 	
 	$(listSelector).find(".glyphicon-arrow-up").click(function(event){
-		var li = $(event.currentTarget).parent("li"),
+		var li = $(event.currentTarget).parents(elementSelector),
 			other = $(li).prev();
-		var updated = updateSequence(li, other, listSelector, tableName);
+		var updated = updateSequence(li, other, listSelector, tableName, allowSequenceZero);
 		
 		if(updated){
 			other.before(li);
@@ -176,9 +176,9 @@ function installUpdateSequence(listSelector, elementSelector, tableName){
 	});
 	
 	$(listSelector).find(".glyphicon-arrow-down").click(function(event){
-		var li = $(event.currentTarget).parent("li"),
+		var li = $(event.currentTarget).parents(elementSelector),
 			other = $(li).next();
-		var updated = updateSequence(li, other, listSelector, tableName);
+		var updated = updateSequence(li, other, listSelector, tableName, allowSequenceZero);
 		
 		if(updated){
 			li.before(other);
@@ -192,11 +192,16 @@ function installUpdateSequence(listSelector, elementSelector, tableName){
 	});
 };
 	
-function updateSequence(li, other, listSelector, tableName){
+function updateSequence(li, other, listSelector, tableName, allowSequenceZero){
 	var sequence = li.data("sequence"),
 		otherSequence = other.data("sequence");
-	if(otherSequence == undefined || otherSequence  <=0){
+	console.log(li, other, listSelector, tableName, sequence, otherSequence);
+	if(otherSequence == undefined || ( allowSequenceZero != true && otherSequence  <=0 )){
 		return false;
+	}
+	
+	if(sequence == otherSequence){
+		otherSequence++;
 	}
 	
 	var updateInfo = { multiple: true, data: null};

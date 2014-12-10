@@ -116,6 +116,7 @@ var saveFunction = function(auto) {
 			var splitted =	data.split("id: ")
 			debug("Data Loaded: " + data, "id:", splitted[splitted.length-1]);
 			var description = $("#<?php echo $formBuilder->getId("param.description");?>")[0].value;
+			var isSpecial = $("#<?php echo $formBuilder->getId("param.isSpecial");?>")[0].checked
 			$("#<?php echo $formBuilder->getId("param.description");?>")[0].value ="";
 			var seq = $("#<?php echo $formBuilder->getId("param.sequence");?>")[0].value;
 			var nextSeq = 1+parseInt(seq);
@@ -128,9 +129,8 @@ var saveFunction = function(auto) {
 
 			$("#rounds").append( 
 					'<li id="round_' + id +'" class="list-group-item">' +
-					'<span class="glyphicon glyphicon-arrow-up"></span><span class="glyphicon glyphicon-arrow-down">&nbsp;&nbsp;&nbsp;' +
-					'<span class="editableText" id="description_' + id +'" >' + description + "</span>" +
-					// '<input type="checkbox" title="speciale ronde?" id="isSpecial_' + id +'" ' . ($round["isSpecial"]?' checked="yes"':"") . ' onchange="changeIsSpecial(this)"/>' +
+					'<span class="" id="description_' + id +'" style="padding-left: 45px;" >' + description + "</span>" +
+					'<input type="checkbox" title="speciale ronde?" id="isSpecial_' + id +'" ' + (isSpecial?' checked="yes"':"") + ' disabled="true"/>' +
 					'</li>');
 
 		});
